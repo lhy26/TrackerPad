@@ -1,6 +1,6 @@
 {
-  "name": "frontend",
-  "version": "0.0.1-SNAPSHOT",
+  "name": "TrackerPad",
+  "version": "0.1.0-beta",
   "description": "",
   "main": "./js",
   "scripts": {
