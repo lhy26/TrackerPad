@@ -1,7 +1,11 @@
+import {chooseMeasurementDevice} from '../logic/TrackerCommands'
+import {connectSensorRequest,connectSensorSuccessful,connectSensorFail,
+        initSocketRequest,initSocketResponse,initSocketFail,initSocket,
+        connectSensor } from '../actions/sensorActions';
 import {
      MEASURE_REQUEST,
      CONNECT_SENSOR_REQUEST,
-     CONNECT_SENSOR_RESPONSE,
+     CONNECT_SENSOR_SUCCESSFUL,
      CONNECT_SENSOR_FAIL,
      INIT_SOCKET_REQUEST,
      INIT_SOCKET_RESPONSE,
@@ -9,108 +13,88 @@ import {
      DISCONNECT_SENSOR_REQUEST,
      SET_SENSOR
 } from '../actions/sensorActions';
-import { connectSensorRequest,connectSensorResponse,connectSensorFail,initSocketRequest,initSocketResponse,initSocketFail,initSocket,connectSensor } from '../actions/sensorActions';
-import {  chooseMeasurementDevice} from '../logic/TrackerCommands'
+
+//script variables
 let activeCmd = {id:0, type:''}
 let websocket ;
-var idCount = 0;
-export function writeToScreen(message)
-{
- //document.body.appendChild(document.createElement('output_area')).innerHTML = message;
- const output = document.getElementById("output_area");
- //  output.value += message + "\n";
 
- var pre = document.createElement("p");
- pre.style.wordWrap = "break-word";
- pre.innerHTML = message;
- output.appendChild(pre);
-}
-
-
-
+/**
+ *Initialize the connection between webservice(websocket) and
+ *trackerpad if the html page refreshes
+ *
+ * @param evt
+ */
 export const initWebSocket = store => {
+
+   //as soon as the connection between Trackerpad and webservice is open
+   // the function OnOpen will be triggered
+   // onOpen successful -> you can communicate with the service
    const onOpen = (evt) =>
     {
-      //dispatch(actions.setsocketConnection(true));
       console.log("HIER BEI ONOPEN, Mit Webservice verbunden");
     }
+
+   //if the onOpen not successful -> onClose will be  triggered
    const onClose = (evt)=>
     {
     console.log("HIER BEI ONCLOSE");
     }
+
+   //if there is an error during the connection -> onErro will be triggered
    const onError = (evt)=>
     {
       writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
     }
 
-  const onMessage = (evt, store) =>{
-    var msg = JSON.parse(evt.data);
-    console.log("onmessage aufgerufen");
-     //evt.data umwandeln in objekte für action
-    // action abfeuern
-     if(activeCmd.type == 'connect' && activeCmd.id == evt.data.id){
-       console.log("onmessage aufgerufen2")
-     return dispatch => dispatch(connectSensorResponse(evt.data));
-       console.log("onmessage aufgerufen3");
-    }
-    else{
-       console.log("onmessage aufgerufen4");
-     return dispatch => dispatch(connectSensorFail(evt.data));
-    }
+   //dispatch specific action to trigger update
+   const onMessage = (evt, store) =>{
+     var response = JSON.parse(evt.data);
+     //var msg = JSON.parse(evt.data);
+     console.log(response);
+     console.log("onmessage aufgerufen");
+     //checks if Cmd.Type is right and if evt.data.id matchs with activeCmd.id
+     if(activeCmd.type == 'connect' && activeCmd.id == response.id){
+       console.log("onmessage aufgerufen2");
+       if(response.result.successful){
+         store.dispatch(connectSensorSuccessful(response));
+         return;
+       }else{
+         store.dispatch(connectSensorFail(response));
+         return;
+       }
+     console.log("onmessage aufgerufen3");
+     }else if (activeCmd.type == 'disconnect' && activeCmd.id == response.id){
 
-   //HIER MUSS DAS EVENT "GEPARSED" werden
- console.log(evt)
- }
-  //  socket Connection callbacks <-- diese nachricht wurde kopiert xD
-  websocket = new WebSocket("ws://127.0.0.1:8090")
-  websocket.onopen = function(evt) { onOpen(evt) };
-  websocket.onclose = function(evt) { onClose(evt) };
-  websocket.onmessage = function(evt) { onMessage(evt) };
-  websocket.onerror = function(evt) { onError(evt) };
+     }else{
+      console.log("onmessage aufgerufen4");
+     }
+   }
 
-
-/*const onMessage = (ws,store) => evt => {
-  //Parse the JSON message received on the websocket
-  var msg = JSON.parse(evt.data);
-  switch(msg.type) {
-    case "CHAT_MESSAGE":
-      //Dispatch an action that adds the received message to our state
-      store.dispatch(actions.messageReceived(msg));
-      break;
-    default:
-      console.log("Received unknown message type: '" + msg.type + "'");
-      break;
-  }
-}*/
-
-//connect web socket
-/*var websocket;
-websocket = new WebSocket("ws://127.0.0.1:8090");
-websocket.onopen = function(evt) { onOpen(evt) };
-websocket.onclose = function(evt) { onClose(evt) };
-websocket.onmessage = function(evt) { onMessage(evt) };
-websocket.onerror = function(evt) { onError(evt) };
-
-
-*/
+     /* socket Connection callbacks
+     set local const to functions with the value 'evt'*/
+     websocket = new WebSocket("ws://127.0.0.1:8090")
+     websocket.onopen = function(evt) { onOpen(evt) };
+     websocket.onclose = function(evt) { onClose(evt) };
+     websocket.onmessage = function(evt) { onMessage(evt) };
+     websocket.onerror = function(evt) { onError(evt) };
 }
 
 /**
- * Middleware that reacts on specific actions and sends sensor tasks to the backend via websocket connection.
- *
+ * Middleware that reacts on specific actions and sends sensor tasks to the
+ * backend via websocket connection.
  * @param store
  */
 export  const sensorSocketMiddleware = store => next => action => {
 
+    //init local var
     const result = next(action);
-  //react on specific actions
+
+    //react on specific actions
     switch(action.type){
         case CONNECT_SENSOR_REQUEST: {
           console.log('jetzt bin ich beim middleware gedöns')
-          //connect();
-          action.connectSensor , websocket
-            //stompClient.send("/user/sensors/sensor/connect", {}, JSON.stringify(action.sensor));
-            break;
+          connect();
+          break;
         }
         case DISCONNECT_SENSOR_REQUEST: {
             console.log('jetzt bin ich beim middleware gedöns disconnect MW')
@@ -127,80 +111,102 @@ export  const sensorSocketMiddleware = store => next => action => {
           measure();
             break;
         }
-        /*
-        case COMPIT_REQUEST: {
-          console.log('MW COMPIT_REQUEST')
-          compIt();
-
-            break;
-        }
-      */    case INIT_SOCKET_REQUEST: {
+        case INIT_SOCKET_REQUEST: {
           console.log('MW INIT_SOCKET_REQUEST')
-
-
-
-            break;
+          break;
         }
-      //  case INIT_SENSOR_REQUEST: {
-            //stompClient.send("/user/sensors/sensor/initialize", {}, {});
-      //      break;
-        //}
     }
 
     return result;
 
 };
-//functions
 
+/**
+ * Sends parameters(a RequestObject) to the webservice which
+ *  establish/enable a connection between trackerpad and tracker
+ * @param
+ */
 function connect()
 {
-  activeCmd.id = idCount;
-  activeCmd.type = "connect";
+
+  //set up script variables
+  activeCmd.id = activeCmd.id+1; //sum up 1 to the local variable idCount
+  activeCmd.type = "connect"; //set the active Command Type (activeCmd.type) to connect
   console.log("connect aufgerufen");
+
+  //build up request object
   let message = JSON.stringify({
                 "jsonrpc": "2.0",
-                "id": idCount,
+                "id": activeCmd.id,
                 "method": "connectSensor",
                 "params": {}
               }, undefined, 4)
+
+  //fire methods and websocket
+  writeToScreen('SENT: ');
+  writeToScreen(message);
   websocket.send(message);
 }
+
+/**
+ *Sends Parameters(a RequestObject) to the webservice and middleware
+ *which disabale the connection between trackerpad and tracker
+ * @param
+ */
 export function disconnect()
 {
   console.log("disconnect aufgerufen");
-  idCount += 1
+  //set up script variables
+  activeCmd.id = activeCmd.id+1; //sum up 1 to the local variable idCount
+  activeCmd.type = "connect"; //set the active Command Type (activeCmd.type) to connect
+
+  //build up request object
   let message = JSON.stringify({
                 "jsonrpc": "2.0",
-                "id": idCount,
+                "id": activeCmd.id,
                 "method": "disconnectSensor",
                 "params": {}
               })
+  //fire methods and websocket
   writeToScreen('SENT: ');
   writeToScreen(message);
-//  websocket = new WebSocket(wsUri);
   websocket.send(message);
 }
- function writeToScreen(message)
-{
- //document.body.appendChild(document.createElement('output_area')).innerHTML = message;
- const output = document.getElementById("output_area");
- //  output.value += message + "\n";
 
+/**
+*
+*@param {string} message - string to display on screen
+*/
+function writeToScreen(message)
+{
+ const output = document.getElementById("output_area");
  var pre = document.createElement("p");
  pre.style.wordWrap = "break-word";
  pre.innerHTML = message;
  output.appendChild(pre);
 }
+
+/**
+ *Sends Request(Object) to the webservice which tell the "backend" the Tracker
+ * shall measure(Azimuth,Zenith,Distance)
+ * @param
+ */
 function measure()
 {
-  idCount += 1
+  //set up script variables
+  activeCmd.id = activeCmd.id+1; //sum up 1 to the local variable idCount
+  activeCmd.type = "connect"; //set the active Command Type (activeCmd.type) to connect
+
   let  message = JSON.stringify({
                 "jsonrpc": "2.0",
-                "id": idCount,
+                "id": activeCmd.id,
                 "method": "measure",
                 "params": {}
               })
+
+  //fire methods and websocket
   writeToScreen('SENT: ');
   writeToScreen(message);
   websocket.send(message);
+
 }
