@@ -8,12 +8,16 @@ import TrackerUtilities from './TrackerUtilities';
 import TrackerNavBar from './TrackerNavBar';
 import FaceCheck from './FaceCheck';
 
-//ReactDOM.render(<TrackerUtilities/>, document.getElementById('TrackerUtilities'));
+
 
 export default class App extends React.Component {
     constructor(props) {
         super(props);
-        
+/**
+*Creates a router and sets the single paths for the single components
+*it also sets the history route
+*the index route sets the component which will shown, if the html page opens
+*/
     }
     render(){
         return(

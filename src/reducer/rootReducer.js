@@ -1,7 +1,3 @@
-/**
- * Created by brauls on 02.08.2016.
- */
-
 'use strict';
 
 import { combineReducers } from 'redux';
