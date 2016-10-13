@@ -1,16 +1,19 @@
 import {chooseMeasurementDevice} from '../logic/TrackerCommands'
 import {connectSensorRequest,connectSensorSuccessful,connectSensorFail,
         measureActionRequest,measureActionSuccessful,measureActionFail,
-        connectSensor } from '../actions/sensorActions';
+        disConnectSensorRequest,disConnectSensorSuccessful,disConnectSensorFail,
+       } from '../actions/sensorActions';
 import {
      CONNECT_SENSOR_REQUEST,
      CONNECT_SENSOR_SUCCESSFUL,
      CONNECT_SENSOR_FAIL,
-     INIT_SOCKET_REQUEST,
-     INIT_SOCKET_RESPONSE,
-     INIT_SOCKET_FAIL,
+
      DISCONNECT_SENSOR_REQUEST,
+     DISCONNECT_SENSOR_SUCCESSFUL,
+     DISCONNECT_SENSOR_FAIL,
+
      SET_SENSOR,
+
      MEASURE_ACTION_REQUEST,
      MEASURE_ACTION_SUCCESSFUL,
      MEASURE_ACTION_FAIL
@@ -35,13 +38,11 @@ export const initWebSocket = (store) => {
     {
       console.log("HIER BEI ONOPEN, Mit Webservice verbunden");
     }
-
    //if the onOpen not successful -> onClose will be  triggered
    const onClose = (evt)=>
     {
     console.log("HIER BEI ONCLOSE");
     }
-
    //if there is an error during the connection -> onErro will be triggered
    const onError = (evt)=>
     {
@@ -51,7 +52,6 @@ export const initWebSocket = (store) => {
    //dispatch specific action to trigger update
    const onMessage = (evt) =>{
      var response = JSON.parse(evt.data);
-     console.log(response);
      console.log("onmessage aufgerufen");
      //checks if Cmd.Type is right and if evt.data.id matchs with activeCmd.id
      if(activeCmd.type == 'connect' && activeCmd.id == response.id){
@@ -63,9 +63,19 @@ export const initWebSocket = (store) => {
          store.dispatch(connectSensorFail(response));
          return;
        }
+
+     //if there is a connect function, there must also be a disconnect ...
      console.log("onmessage disconnect");
      }else if (activeCmd.type == 'disconnect' && activeCmd.id == response.id){
+       if(response.result.successful){
+         store.dispatch(disConnectSensorSuccessful(response));
+         return;
+       }else{
+         store.dispatch(disConnectSensorFail(response));
+         return;
+       }
 
+     //Block which handle´s the Measure Button Response
      }else if (activeCmd.type == 'measure' && activeCmd.id == response.id){
        console.log('onmessage measure')
        if(response.result.successful){
@@ -112,7 +122,6 @@ export  const sensorSocketMiddleware = store => next => action => {
             break;
         }
         case SET_SENSOR: {
-          console.log('MW SET_SENSOR')
           chooseMeasurementDevice(action.newActiveSensor , websocket);
             break;
         }

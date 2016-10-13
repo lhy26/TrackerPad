@@ -256,7 +256,7 @@ export function echo(name)
     websocket.send(message);
   }
 */
-/*
+
   export function disconnect()
   {
   	console.log("disconnect aufgerufen");
@@ -274,7 +274,7 @@ export function echo(name)
   //  websocket = new WebSocket(wsUri);
     websocket.send(message);
   }
-
+/*
   export function measure()
   {
     idCount += 1

@@ -8,12 +8,15 @@ export const MEASURE_ACTION_REQUEST = 'MEASURE_ACTION_REQUEST'
 export const MEASURE_ACTION_SUCCESSFUL ='MEASURE_ACTION_SUCCESSFUL'
 export const MEASURE_ACTION_FAIL = 'MEASURE_ACTION_FAIL'
 
+export const DISCONNECT_SENSOR_REQUEST = 'DISCONNECT_SENSOR_REQUEST'
+export const DISCONNECT_SENSOR_SUCCESSFUL ='DISCONNECT_SENSOR_SUCCESSFUL'
+export const DISCONNECT_SENSOR_FAIL = 'DISCONNECT_SENSOR_FAIL'
+
 /**
  *actioncreator for the Websocket
  * @param {string} name
  */
 export function setSensor(name){
-  console.log ('ich bin hier bei SET_SENSOR ACTIONS')
   return{
     type:SET_SENSOR,
     newActiveSensor: name
@@ -77,6 +80,13 @@ export function connectSensor(sensor){
     };
 }
 
+/**
+* Checks if a sensor(Tracker) is already connected,
+* then dispatches an action from below
+* @param {string} sensor
+* @param {string} error
+* @param {string} response
+*/
 export function measureAction(isConnected){
   console.log ('ich bin hier bei Measuraction FUNKTION')
     if ( isConnected == 'false'){
@@ -88,6 +98,11 @@ export function measureAction(isConnected){
     };
 }
 
+/**
+ *actioncreator for the measureActionRequest() method
+ *action will be fired as request
+ * @param
+ */
 export function measureActionRequest(){
  console.log ('ich bin hier bei measur Action request')
  return{
@@ -95,6 +110,11 @@ export function measureActionRequest(){
  };
 }
 
+/**
+*actioncreator for the measureAction() method
+*action will be fired as response if the action is successful
+* @param {string} response - might be the response from the middleware
+*/
 export function measureActionSuccessful(response){
   console.log ('measureActionSuccessful')
   console.log(response)
@@ -104,10 +124,72 @@ export function measureActionSuccessful(response){
   };
 }
 
+/**
+*actioncreator for the measureAction() method.
+*action will be fired if the measurement fails.
+* @param {string} error
+*/
 export function measureActionFail(error){
  console.log ('ich bin hier bei measurAction Failure')
  return{
     type:MEASURE_ACTION_FAIL,
     error
  };
+}
+
+/**
+ *actioncreator for the disConnectSensor() method
+ *action will be fired as request
+ * @param
+ */
+export function disConnectSensorRequest(){
+ console.log ('ich bin hier bei disConnect sensor request')
+ return{
+    type:DISCONNECT_SENSOR_REQUEST,
+ };
+}
+
+/**
+*actioncreator for the disConnectSensor() method
+*action will be fired as response
+* @param {string} response - might be the response from the middleware
+*/
+export function disConnectSensorSuccessful(response){
+  console.log ('ich bin hier bei DisConnect sensor ')
+  console.log(response)
+  return{
+    type:DISCONNECT_SENSOR_SUCCESSFUL,
+    response
+  };
+}
+
+/**
+*actioncreator for the disConnectSensor() method.
+*action will be fired if the disconnect fails(which is...strange).
+* @param {string} error
+*/
+export function disConnectSensorFail(error){
+ console.log ('ich bin hier bei DisConnect sensor Failure')
+ return{
+    type:DISCONNECT_SENSOR_FAIL,
+    error
+ };
+}
+
+/**
+* Checks if a sensor(Tracker) is already choosen,
+* then dispatches an action from above
+* @param {string} sensor
+* @param {string} error
+* @param {string} response
+*/
+export function disConnectSensor(sensor){
+  console.log ('ich bin hier bei DisConnect sensor FUNKTION')
+    if (sensor == 'none'){
+        let error = "no Sensor chosen";
+        return dispatch => {dispatch(disConnectSensorFail(error));};
+    }
+    return dispatch => {
+        dispatch(disConnectSensorRequest(sensor));
+    };
 }

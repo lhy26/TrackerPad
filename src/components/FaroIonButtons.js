@@ -1,7 +1,7 @@
 import React from 'react';
 import {Button, ButtonGroup} from 'react-bootstrap';
 import {connect} from "react-redux";
-import {connectSensor, disconnectSensor, measureAction} from '../actions/sensorActions'
+import {connectSensor, disConnectSensor, measureAction} from '../actions/sensorActions'
 import {compIt} from '../logic/TrackerCommands'
 import {toggle} from '../logic/TrackerCommands'
 import {home} from '../logic/TrackerCommands'
@@ -17,13 +17,18 @@ const mapStateToProps = state => {
 };
 
 /**
- *
+ *If an object is passed, each function inside it will
+ *be assumed to be a Redux action creator. An object with the same
+ *function names, but with every action creator wrapped into a dispatch call
+ *so they may be invoked directly, will be merged into the component’s 
+ *props. If a function is passed, it will be given dispatch.
  *
  */
 const mapDispatchToProps = dispatch => {
     return{
         onConnectSensorRequest: () => dispatch(connectSensor()),
-        onMeasureRequest: () => dispatch(measureAction())
+        onMeasureRequest: () => dispatch(measureAction()),
+        onDisConnectSensorRequest: () => dispatch(disConnectSensor())
     };
 };
 

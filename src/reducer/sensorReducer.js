@@ -3,6 +3,8 @@ import {
     CONNECT_SENSOR_REQUEST,
     CONNECT_SENSOR_SUCCESSFUL,
     CONNECT_SENSOR_FAIL,
+    DISCONNECT_SENSOR_SUCCESSFUL,
+    DISCONNECT_SENSOR_FAIL,
     MEASURE_ACTION_SUCCESSFUL,
     MEASURE_ACTION_FAIL
 } from '../actions/sensorActions';
@@ -23,23 +25,18 @@ const initialSensor = {
  * reducer for sensor actions
  * manage actions from middleware
  * switches the value of the states on top
+ * I think the ActionNames speaks for itself
  * @param
  */
 const sensorReducer = (state = initialSensor, action) => {
     switch(action.type){
         // set new sensor
         case SET_SENSOR: {
-          console.log('jetzt bin ich beim sensor reducer SET_SENSOR')
             return Object.assign({}, state,  {
                 activeSensor: action.newActiveSensor,
             });
         }
-        /*case CONNECT_SENSOR_REQUEST: {
-          console.log('jetzt bin ich beim sensor reducer CONNECT SENSOR REQUEST')
-          /*  return Object.assign({}, state,{
-              isConnected: action.isConnected
-          });
-        }*/
+
         case CONNECT_SENSOR_SUCCESSFUL: {
           console.log('jetzt bin ich beim sensor reducer CONNECT SENSOR SUCCESSFUL')
           return Object.assign({}, state,{
@@ -52,20 +49,35 @@ const sensorReducer = (state = initialSensor, action) => {
               isConnected: action.error.result.successful
           });
         }
+
         case MEASURE_ACTION_SUCCESSFUL: {
           console.log('jetzt bin ich beim sensor reducer MEASUR_ACTION_SUCCESSFUL')
-          let measCount = initialSensor.measureNumber;
+          let measCount = state.measureNumber;
           if(action.response.result.successful){
             measCount += 1
           }
           return Object.assign({}, state,{
-              measurNumber: measCount
+              measureNumber: state.measureNumber + 1
           });
         }
         case MEASURE_ACTION_FAIL: {
           console.log('jetzt bin ich beim sensor reducer MEASUR_ACTION_FAIL')
+          let measCount = initialSensor.measureNumber;
           return Object.assign({}, state,{
-              measurNumber:measCount
+              measureNumber: measCount
+          });
+        }
+
+        case DISCONNECT_SENSOR_SUCCESSFUL: {
+          console.log('jetzt bin ich beim sensor reducer DISCONNECT_SENSOR_SUCCESSFUL')
+          return Object.assign({}, state,{
+            isConnected: false
+          });
+        }
+        case DISCONNECT_SENSOR_FAIL: {
+          console.log('jetzt bin ich beim sensor reducer DISCONNECT_SENSOR_FAIL')
+          return Object.assign({}, state,{
+            isConnected: action.response.result.successful
           });
         }
     }
