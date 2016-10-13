@@ -2,8 +2,7 @@ import {applyMiddleware, createStore, compose} from "redux";
 import rootReducer from '../reducer/rootReducer';
 import {sensorSocketMiddleware} from '../middleware/sensorSocketMW';
 import thunkMiddleware from "redux-thunk";
-
-
+import { composeWithDevTools } from 'redux-devtools-extension';
 
 /**
  * Create the store.
@@ -31,8 +30,8 @@ export default function configureStore(preloadedState) {
         rootReducer,
         preloadedState,
         compose(
-          applyMiddleware(thunkMiddleware,sensorSocketMiddleware, logger, error),
-          window.devToolsExtension ? window.devToolsExtension() : f => f // for debugging in a browser
+          applyMiddleware(logger,thunkMiddleware,sensorSocketMiddleware, error),
+          //window.devToolsExtension ? window.devToolsExtension() : f => f // for debugging in a browser
         )
     );
     store.subscribe(() =>{

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Button, ButtonGroup} from 'react-bootstrap';
 import {connect} from "react-redux";
-import {connectSensor, disconnectSensor, measureaction} from '../actions/sensorActions'
+import {connectSensor, disconnectSensor, measureAction} from '../actions/sensorActions'
 import {compIt} from '../logic/TrackerCommands'
 import {toggle} from '../logic/TrackerCommands'
 import {home} from '../logic/TrackerCommands'
@@ -23,6 +23,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return{
         onConnectSensorRequest: () => dispatch(connectSensor()),
+        onMeasureRequest: () => dispatch(measureAction())
     };
 };
 

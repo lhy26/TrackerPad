@@ -4,6 +4,10 @@ export const CONNECT_SENSOR_REQUEST='CONNECT_SENSOR_REQUEST'
 export const CONNECT_SENSOR_SUCCESSFUL='CONNECT_SENSOR_SUCCESSFUL'
 export const CONNECT_SENSOR_FAIL = 'CONNECT_SENSOR_FAIL'
 
+export const MEASURE_ACTION_REQUEST = 'MEASURE_ACTION_REQUEST'
+export const MEASURE_ACTION_SUCCESSFUL ='MEASURE_ACTION_SUCCESSFUL'
+export const MEASURE_ACTION_FAIL = 'MEASURE_ACTION_FAIL'
+
 /**
  *actioncreator for the Websocket
  * @param {string} name
@@ -71,4 +75,39 @@ export function connectSensor(sensor){
     return dispatch => {
         dispatch(connectSensorRequest());
     };
+}
+
+export function measureAction(isConnected){
+  console.log ('ich bin hier bei Measuraction FUNKTION')
+    if ( isConnected == 'false'){
+        let error = "Sensor not connected";
+        return dispatch => {dispatch(measureActionFail(error));};
+    }
+    return dispatch => {
+        dispatch(measureActionRequest());
+    };
+}
+
+export function measureActionRequest(){
+ console.log ('ich bin hier bei measur Action request')
+ return{
+    type:MEASURE_ACTION_REQUEST,
+ };
+}
+
+export function measureActionSuccessful(response){
+  console.log ('measureActionSuccessful')
+  console.log(response)
+  return{
+    type:MEASURE_ACTION_SUCCESSFUL,
+    response
+  };
+}
+
+export function measureActionFail(error){
+ console.log ('ich bin hier bei measurAction Failure')
+ return{
+    type:MEASURE_ACTION_FAIL,
+    error
+ };
 }

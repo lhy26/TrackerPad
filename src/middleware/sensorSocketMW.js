@@ -1,9 +1,8 @@
 import {chooseMeasurementDevice} from '../logic/TrackerCommands'
 import {connectSensorRequest,connectSensorSuccessful,connectSensorFail,
-        initSocketRequest,initSocketResponse,initSocketFail,initSocket,
+        measureActionRequest,measureActionSuccessful,measureActionFail,
         connectSensor } from '../actions/sensorActions';
 import {
-     MEASURE_REQUEST,
      CONNECT_SENSOR_REQUEST,
      CONNECT_SENSOR_SUCCESSFUL,
      CONNECT_SENSOR_FAIL,
@@ -11,7 +10,10 @@ import {
      INIT_SOCKET_RESPONSE,
      INIT_SOCKET_FAIL,
      DISCONNECT_SENSOR_REQUEST,
-     SET_SENSOR
+     SET_SENSOR,
+     MEASURE_ACTION_REQUEST,
+     MEASURE_ACTION_SUCCESSFUL,
+     MEASURE_ACTION_FAIL
 } from '../actions/sensorActions';
 
 //script variables
@@ -24,7 +26,7 @@ let websocket ;
  *
  * @param evt
  */
-export const initWebSocket = store => {
+export const initWebSocket = (store) => {
 
    //as soon as the connection between Trackerpad and webservice is open
    // the function OnOpen will be triggered
@@ -47,14 +49,13 @@ export const initWebSocket = store => {
     }
 
    //dispatch specific action to trigger update
-   const onMessage = (evt, store) =>{
+   const onMessage = (evt) =>{
      var response = JSON.parse(evt.data);
-     //var msg = JSON.parse(evt.data);
      console.log(response);
      console.log("onmessage aufgerufen");
      //checks if Cmd.Type is right and if evt.data.id matchs with activeCmd.id
      if(activeCmd.type == 'connect' && activeCmd.id == response.id){
-       console.log("onmessage aufgerufen2");
+       console.log("onmessage connect");
        if(response.result.successful){
          store.dispatch(connectSensorSuccessful(response));
          return;
@@ -62,9 +63,18 @@ export const initWebSocket = store => {
          store.dispatch(connectSensorFail(response));
          return;
        }
-     console.log("onmessage aufgerufen3");
+     console.log("onmessage disconnect");
      }else if (activeCmd.type == 'disconnect' && activeCmd.id == response.id){
 
+     }else if (activeCmd.type == 'measure' && activeCmd.id == response.id){
+       console.log('onmessage measure')
+       if(response.result.successful){
+         store.dispatch(measureActionSuccessful(response));
+         return;
+       }else{
+         store.dispatch(measureActionFail(response));
+         return;
+       }
      }else{
       console.log("onmessage aufgerufen4");
      }
@@ -106,15 +116,12 @@ export  const sensorSocketMiddleware = store => next => action => {
           chooseMeasurementDevice(action.newActiveSensor , websocket);
             break;
         }
-        case MEASURE_REQUEST: {
-          console.log('MW MEASURE_REQUEST')
+        case MEASURE_ACTION_REQUEST: {
+          console.log('MW MEASURE_ACTION_REQUEST')
           measure();
             break;
         }
-        case INIT_SOCKET_REQUEST: {
-          console.log('MW INIT_SOCKET_REQUEST')
-          break;
-        }
+
     }
 
     return result;
@@ -158,7 +165,7 @@ export function disconnect()
   console.log("disconnect aufgerufen");
   //set up script variables
   activeCmd.id = activeCmd.id+1; //sum up 1 to the local variable idCount
-  activeCmd.type = "connect"; //set the active Command Type (activeCmd.type) to connect
+  activeCmd.type = "disconnect"; //set the active Command Type (activeCmd.type) to connect
 
   //build up request object
   let message = JSON.stringify({
@@ -195,7 +202,7 @@ function measure()
 {
   //set up script variables
   activeCmd.id = activeCmd.id+1; //sum up 1 to the local variable idCount
-  activeCmd.type = "connect"; //set the active Command Type (activeCmd.type) to connect
+  activeCmd.type = "measure"; //set the active Command Type (activeCmd.type) to connect
 
   let  message = JSON.stringify({
                 "jsonrpc": "2.0",

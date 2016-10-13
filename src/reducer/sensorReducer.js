@@ -2,7 +2,9 @@ import {
     SET_SENSOR,
     CONNECT_SENSOR_REQUEST,
     CONNECT_SENSOR_SUCCESSFUL,
-    CONNECT_SENSOR_FAIL
+    CONNECT_SENSOR_FAIL,
+    MEASURE_ACTION_SUCCESSFUL,
+    MEASURE_ACTION_FAIL
 } from '../actions/sensorActions';
 
 
@@ -14,6 +16,7 @@ const initialSensor = {
                 'FaroVantage',
                 'LeicaAt40x'], //all available sensor types
   isConnected: false, //check if sensor is connected
+  measureNumber: 0 //hypotetically ..counts
 };
 
 /**
@@ -47,6 +50,22 @@ const sensorReducer = (state = initialSensor, action) => {
           console.log('jetzt bin ich beim sensor reducer CONNECT SENSOR FAIL')
           return Object.assign({}, state,{
               isConnected: action.error.result.successful
+          });
+        }
+        case MEASURE_ACTION_SUCCESSFUL: {
+          console.log('jetzt bin ich beim sensor reducer MEASUR_ACTION_SUCCESSFUL')
+          let measCount = initialSensor.measureNumber;
+          if(action.response.result.successful){
+            measCount += 1
+          }
+          return Object.assign({}, state,{
+              measurNumber: measCount
+          });
+        }
+        case MEASURE_ACTION_FAIL: {
+          console.log('jetzt bin ich beim sensor reducer MEASUR_ACTION_FAIL')
+          return Object.assign({}, state,{
+              measurNumber:measCount
           });
         }
     }
