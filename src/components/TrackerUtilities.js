@@ -11,8 +11,6 @@ const mapStateToProps = (state) => {
     return{
         activeSensor: state.sensor.activeSensor,
         sensorTypes: state.sensor.sensorTypes,
-        isConnected: state.sensor.isConnected
-
 
     };
 };
@@ -51,7 +49,8 @@ export default class TrackerUtilities extends React.Component {
 
   handleActiveSensorChange(e){
       if(this.props.activeSensor != 'none'){
-         disconnect();
+         return;
+         this.props.onDisConnectSensor();
       }
 
   //   if(sensorServiceConnected == true){
@@ -75,7 +74,7 @@ export default class TrackerUtilities extends React.Component {
             <Row className ='show-grid' >
               <Col xs={2} md={2}>
                   <FormControl
-                  componentClass="select" placeholder="sensor type" value={this.props.activeSensor} onChange={this.handleActiveSensorChange} >
+                  componentClass="select" placeholder="sensor type" value={this.props.activeSensor} onChange={this.handleActiveSensorChange}>
                   {sensorOptions}
                   </FormControl>
               </Col>

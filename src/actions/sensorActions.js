@@ -397,7 +397,7 @@ export function initActionRequest(){
 * @param {string} response - might be the response from the middleware
 */
 export function initActionSuccessful(response){
-  console.log ('compItActionSuccessful')
+  console.log ('initActionSuccessful')
   console.log(response)
   return{
     type:INIT_ACTION_SUCCESSFUL,
@@ -411,7 +411,7 @@ export function initActionSuccessful(response){
 * @param {string} error
 */
 export function initActionFail(error){
- console.log ('ich bin hier bei compIt Failure')
+ console.log ('ich bin hier bei initActionFail ')
  return{
     type:INIT_ACTION_FAIL,
     error

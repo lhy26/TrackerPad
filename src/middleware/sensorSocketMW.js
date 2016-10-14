@@ -75,7 +75,6 @@ export const initWebSocket = (store) => {
    //dispatch specific action to trigger update
    const onMessage = (evt) =>{
      var response = JSON.parse(evt.data);
-     console.log("onmessage aufgerufen");
      //checks if Cmd.Type is right and if evt.data.id matchs with activeCmd.id
      if(activeCmd.type == 'connect' && activeCmd.id == response.id){
        console.log("onmessage connect");
@@ -109,7 +108,7 @@ export const initWebSocket = (store) => {
          return;
        }
      //Block which handle´s the Toggle Sight Button Response
-     }else if (activeCmd.type == 'doSensorAction' && activeCmd.id == response.id){
+   }else if (activeCmd.type == 'toggle' && activeCmd.id == response.id){
        console.log('onmessage toggle')
        if(response.result.successful){
          store.dispatch(toggleSensorSuccessful(response));
@@ -120,7 +119,7 @@ export const initWebSocket = (store) => {
        }
 
      //Block wich handle´s the Home Button Response
-     }else if (activeCmd.type == 'doSensorAction' && activeCmd.id == response.id){
+   }else if (activeCmd.type == 'home' && activeCmd.id == response.id){
        console.log('onmessage home')
        if(response.result.successful){
          store.dispatch(HomeActionSuccessful(response));
@@ -130,7 +129,7 @@ export const initWebSocket = (store) => {
          return;
        }
      //Block wich handle´s the CompIt Button Response
-     }else if (activeCmd.type == 'doSensorAction' && activeCmd.id == response.id){
+   }else if (activeCmd.type == 'compIt' && activeCmd.id == response.id){
        console.log('onmessage compIt')
        if(response.result.successful){
          store.dispatch(compItActionSuccessful(response));
@@ -140,7 +139,7 @@ export const initWebSocket = (store) => {
          return;
        }
      //Block wich handle´s the Init (Leica Only )Button Response
-     }else if (activeCmd.type == 'doSensorAction' && activeCmd.id == response.id){
+   }else if (activeCmd.type == 'init' && activeCmd.id == response.id){
        console.log('onmessage init')
        if(response.result.successful){
          store.dispatch(initActionSuccessful(response));
@@ -313,7 +312,7 @@ function toggle(){
 
   //set up script variables
   activeCmd.id = activeCmd.id+1; //sum up 1 to the local variable idCount
-  activeCmd.type = "doSensorAction"; //set the active Command Type (activeCmd.type)
+  activeCmd.type = "toggle"; //set the active Command Type (activeCmd.type)
   let  message = JSON.stringify({
                 "jsonrpc": "2.0",
                 "id": activeCmd.id,
@@ -333,7 +332,7 @@ function toggle(){
 function home(){
   //set up script variables
   activeCmd.id = activeCmd.id+1; //sum up 1 to the local variable idCount
-  activeCmd.type = "doSensorAction"; //set the active Command Type (activeCmd.type)
+  activeCmd.type = "home"; //set the active Command Type (activeCmd.type)
   let  message = JSON.stringify({
                  "jsonrpc": "2.0",
                  "id": activeCmd.id,
@@ -354,7 +353,7 @@ function compIt(){
 
   //set up script variables
   activeCmd.id = activeCmd.id+1; //sum up 1 to the local variable idCount
-  activeCmd.type = "doSensorAction"; //set the active Command Type (activeCmd.type)
+  activeCmd.type = "compIt"; //set the active Command Type (activeCmd.type)
   let  message = JSON.stringify({
                   "jsonrpc": "2.0",
                   "id": activeCmd.id,
@@ -370,7 +369,7 @@ function initializeLeica(){
 
   //set up script variables
   activeCmd.id = activeCmd.id+1; //sum up 1 to the local variable idCount
-  activeCmd.type = "doSensorAction"; //set the active Command Type (activeCmd.type)
+  activeCmd.type = "init"; //set the active Command Type (activeCmd.type)
   let  message = JSON.stringify({
                   "jsonrpc": "2.0",
                   "id": activeCmd.id,
