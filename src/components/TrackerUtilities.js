@@ -1,8 +1,9 @@
 import React from 'react';
 import { FormControl, Grid,Row,Col } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { setSensor, connectSensor,disconnectSensor, measureaction } from '../actions/sensorActions';
-import {chooseMeasurementDevice, init, disconnect, sensorServiceConnected} from '../logic/TrackerCommands';
+import { setSensor, connectSensor,disconnectSensor, measureaction,
+        toggleSensor} from '../actions/sensorActions';
+import {chooseMeasurementDevice, init, disconnect} from '../logic/TrackerCommands';
 import TrackerPad from './TrackerPad';
 import TrackerInput from './TrackerInput';
 import TrackerOutput from './TrackerOutput';
@@ -16,10 +17,13 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
     return{
-        onSetSensor: (name) => dispatch(setSensor(name)),
-        onConnectSensor:() => dispatch(connectSensor()),
-        onDisconnectSensor:() => dispatch(disconnectSensor()),
-        onMeasure:() => dispatch(measureaction())
+
+      onSetSensor: (name) => dispatch(setSensor(name)),
+      onConnectSensor:() => dispatch(connectSensor()),
+      onDisconnectSensor:() => dispatch(disconnectSensor()),
+      onMeasure:() => dispatch(measureaction()),
+      onToggle:() => dispatch(toggleSensor()),
+      onCompIt:() => dispatch(compItaction())
 
     };
 };
@@ -83,9 +87,10 @@ export default class TrackerUtilities extends React.Component {
                   <TrackerPad activeSensor = {this.props.activeSensor}
                               connectSensor = {this.props.onConnectSensor}
                               disconnectSensor = {this.props.onDisconnectSensor}
-                              measure = {this.props.onMeasure}/>
+                              measure = {this.props.onMeasure}
+                              toggle ={this.props.onToggle}
+                              compIt ={this.props.onCompIt}/>
               </Col>
-
               <Col xs={10} md={10}>
                   <TrackerOutput/>
               </Col>

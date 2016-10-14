@@ -12,6 +12,18 @@ export const DISCONNECT_SENSOR_REQUEST = 'DISCONNECT_SENSOR_REQUEST'
 export const DISCONNECT_SENSOR_SUCCESSFUL ='DISCONNECT_SENSOR_SUCCESSFUL'
 export const DISCONNECT_SENSOR_FAIL = 'DISCONNECT_SENSOR_FAIL'
 
+export const TOGGLE_SENSOR_REQUEST = 'TOGGLE_SENSOR_REQUEST'
+export const TOGGLE_SENSOR_SUCCESSFUL = 'TOGGLE_SENSOR_SUCCESSFUL'
+export const TOGGLE_SENSOR_FAIL = 'TOGGLE_SENSOR_FAIL'
+
+export const HOME_ACTION_REQUEST = 'HOME_ACTION_REQUEST'
+export const HOME_ACTION_SUCCESSFUL ='HOME_ACTION_SUCCESSFUL'
+export const HOME_ACTION_FAIL = 'HOME_ACTION_FAIL'
+
+export const COMPIT_ACTION_REQUEST ='COMPIT_ACTION_REQUEST'
+export const COMPIT_ACTION_SUCCESSFUL ='COMPIT_ACTION_SUCCESSFUL'
+export const COMPIT_ACTION_FAIL = 'COMPIT_ACTION_FAIL'
+
 /**
  *actioncreator for the Websocket
  * @param {string} name
@@ -191,5 +203,104 @@ export function disConnectSensor(sensor){
     }
     return dispatch => {
         dispatch(disConnectSensorRequest(sensor));
+    };
+}
+
+export function toggleSensorRequest(){
+ console.log ('ich bin hier bei TOGGLE request')
+ return{
+    type:TOGGLE_SENSOR_REQUEST,
+ };
+}
+
+export function toggleSensorSuccessful(response){
+  console.log ('ich bin hier bei Toggle succsessful sensor ')
+  console.log(response)
+  return{
+    type:TOGGLE_SENSOR_SUCCESSFUL,
+    response
+  };
+}
+
+export function toggleSensorFail(error){
+ console.log ('ich bin hier bei Toggle Sensor Failure')
+ return{
+    type:TOGGLE_SENSOR_FAIL,
+    error
+ };
+}
+
+export function toggleSensor(isConnected){
+  console.log ('ich bin hier bei ToggleSensor FUNKTION')
+    if ( isConnected == 'false'){
+        let error = "no Sensor connected";
+        return dispatch => {dispatch(toggleSensorFail(error));};
+    }
+    return dispatch => {
+        dispatch(toggleSensorRequest());
+    };
+}
+
+export function homeActionRequest(){
+ console.log ('ich bin hier bei Home request')
+ return{
+    type:HOME_ACTION_REQUEST,
+ };
+}
+export function homeActionSuccessful(response){
+  console.log ('homeActionSuccessful')
+  console.log(response)
+  return{
+    type:HOME_ACTION_SUCCESSFUL,
+    response
+  };
+}
+export function homeActionFail(error){
+ console.log ('ich bin hier bei homeAction Failure')
+ return{
+    type:HOME_ACTION_FAIL,
+    error
+ };
+}
+export function homeAction(isConnected){
+  console.log ('ich bin hier bei Measuraction FUNKTION')
+    if ( isConnected == 'false'){
+        let error = "Sensor not connected";
+        return dispatch => {dispatch(homeActionFail(error));};
+    }
+    return dispatch => {
+        dispatch(homeActionRequest());
+    };
+}
+
+export function compItActionRequest(){
+ console.log ('ich bin hier bei compItActionRequest')
+ return{
+    type:COMPIT_ACTION_REQUEST,
+ };
+}
+export function compItActionSuccessful(response){
+  console.log ('compItActionSuccessful')
+  console.log(response)
+  return{
+    type:COMPIT_ACTION_SUCCESSFUL,
+    response
+  };
+}
+export function compItActionFail(error){
+ console.log ('ich bin hier bei compIt Failure')
+ return{
+    type:COMPIT_ACTION_FAIL,
+    error
+ };
+}
+export function compItAction(isConnected){
+  console.log ('ich bin hier bei compItAction FUNKTION')
+    if ( isConnected == 'false'){
+        let error = "Sensor not connected";
+        return dispatch => {dispatch(compItActionFail(error));};
+    }
+    return dispatch => {
+        dispatch(compItActionRequest());
     };
 }

@@ -2,6 +2,9 @@ import {chooseMeasurementDevice} from '../logic/TrackerCommands'
 import {connectSensorRequest,connectSensorSuccessful,connectSensorFail,
         measureActionRequest,measureActionSuccessful,measureActionFail,
         disConnectSensorRequest,disConnectSensorSuccessful,disConnectSensorFail,
+        toggleSensorRequest,toggleSensorSuccessful,toggleSensorFail,
+        homeActionRequest,homeActionSuccessful,homeActionFail,
+        compItActionRequest,compItActionSuccessful,compItActionFail
        } from '../actions/sensorActions';
 import {
      CONNECT_SENSOR_REQUEST,
@@ -16,7 +19,21 @@ import {
 
      MEASURE_ACTION_REQUEST,
      MEASURE_ACTION_SUCCESSFUL,
-     MEASURE_ACTION_FAIL
+     MEASURE_ACTION_FAIL,
+
+     TOGGLE_SENSOR_REQUEST,
+     TOGGLE_SENSOR_SUCCESSFUL,
+     TOGGLE_SENSOR_FAIL,
+
+     HOME_ACTION_REQUEST,
+     HOME_ACTION_SUCCESSFUL,
+     HOME_ACTION_FAIL,
+
+     COMPIT_ACTION_REQUEST,
+     COMPIT_ACTION_SUCCESSFUL,
+     COMPIT_ACTION_FAIL
+
+
 } from '../actions/sensorActions';
 
 //script variables
@@ -85,7 +102,38 @@ export const initWebSocket = (store) => {
          store.dispatch(measureActionFail(response));
          return;
        }
-     }else{
+       //Block which handle´s the Toggle Sight Button Response
+     }else if (activeCmd.type == 'doSensorAction' && activeCmd.id == response.id){
+         console.log('onmessage toggle')
+         if(response.result.successful){
+           store.dispatch(toggleSensorSuccessful(response));
+           return;
+         }else{
+           store.dispatch(toggleSensorFail(response));
+           return;
+         }
+        //Block wich handle´s the Home Butto Response
+     }else if (activeCmd.type == 'doSensorAction' && activeCmd.id == response.id){
+            console.log('onmessage home')
+            if(response.result.successful){
+              store.dispatch(HomeActionSuccessful(response));
+              return;
+            }else{
+              store.dispatch(HomeActionFail(response));
+              return;
+            }
+    //Block wich handle´s the CompIt Butto Response
+     }else if (activeCmd.type == 'doSensorAction' && activeCmd.id == response.id){
+             console.log('onmessage compIt')
+             if(response.result.successful){
+               store.dispatch(compItActionSuccessful(response));
+               return;
+             }else{
+               store.dispatch(compItActionFail(response));
+               return;
+               }
+    }else{
+
       console.log("onmessage aufgerufen4");
      }
    }
@@ -130,6 +178,21 @@ export  const sensorSocketMiddleware = store => next => action => {
           measure();
             break;
         }
+        case TOGGLE_SENSOR_REQUEST: {
+          console.log('MW TOGGLE_SENSOR_REQUEST')
+          toggle();
+            break;
+        }
+        case HOME_ACTION_REQUEST: {
+          console.log('MW HOME_ACTION_REQUEST')
+          home();
+            break;
+        }
+        case COMPIT_ACTION_REQUEST: {
+          console.log('MW COMPIT_ACTION_REQUEST')
+          compIt();
+            break;
+        }
 
     }
 
@@ -142,14 +205,10 @@ export  const sensorSocketMiddleware = store => next => action => {
  *  establish/enable a connection between trackerpad and tracker
  * @param
  */
-function connect()
-{
-
+function connect(){
   //set up script variables
   activeCmd.id = activeCmd.id+1; //sum up 1 to the local variable idCount
   activeCmd.type = "connect"; //set the active Command Type (activeCmd.type) to connect
-  console.log("connect aufgerufen");
-
   //build up request object
   let message = JSON.stringify({
                 "jsonrpc": "2.0",
@@ -169,8 +228,7 @@ function connect()
  *which disabale the connection between trackerpad and tracker
  * @param
  */
-export function disconnect()
-{
+function disconnect(){
   console.log("disconnect aufgerufen");
   //set up script variables
   activeCmd.id = activeCmd.id+1; //sum up 1 to the local variable idCount
@@ -193,13 +251,13 @@ export function disconnect()
 *
 *@param {string} message - string to display on screen
 */
-function writeToScreen(message)
-{
- const output = document.getElementById("output_area");
- var pre = document.createElement("p");
- pre.style.wordWrap = "break-word";
- pre.innerHTML = message;
- output.appendChild(pre);
+function writeToScreen(message){
+
+  const output = document.getElementById("output_area");
+  var pre = document.createElement("p");
+  pre.style.wordWrap = "break-word";
+  pre.innerHTML = message;
+  output.appendChild(pre);
 }
 
 /**
@@ -207,12 +265,11 @@ function writeToScreen(message)
  * shall measure(Azimuth,Zenith,Distance)
  * @param
  */
-function measure()
-{
+function measure(){
+
   //set up script variables
   activeCmd.id = activeCmd.id+1; //sum up 1 to the local variable idCount
-  activeCmd.type = "measure"; //set the active Command Type (activeCmd.type) to connect
-
+  activeCmd.type = "measure"; //set the active Command Type (activeCmd.type)
   let  message = JSON.stringify({
                 "jsonrpc": "2.0",
                 "id": activeCmd.id,
@@ -226,3 +283,48 @@ function measure()
   websocket.send(message);
 
 }
+function toggle(){
+
+  //set up script variables
+  activeCmd.id = activeCmd.id+1; //sum up 1 to the local variable idCount
+  activeCmd.type = "doSensorAction"; //set the active Command Type (activeCmd.type)
+  let  message = JSON.stringify({
+                "jsonrpc": "2.0",
+                "id": activeCmd.id,
+                "method": "doSensorAction",
+                "params": {"name": "toggleSightOrientation", "params":[]}
+              })
+  writeToScreen('SENT: ');
+  writeToScreen(message);
+  websocket.send(message);
+}
+
+function home(){
+  //set up script variables
+  activeCmd.id = activeCmd.id+1; //sum up 1 to the local variable idCount
+  activeCmd.type = "doSensorAction"; //set the active Command Type (activeCmd.type)
+  let  message = JSON.stringify({
+                 "jsonrpc": "2.0",
+                 "id": activeCmd.id,
+                 "method": "doSensorAction",
+                 "params": {"name": "home", "params":[]}
+               })
+   writeToScreen('SENT: ');
+   writeToScreen(message);
+   websocket.send(message);
+ }
+
+function compIt(){
+  //set up script variables
+  activeCmd.id = activeCmd.id+1; //sum up 1 to the local variable idCount
+  activeCmd.type = "doSensorAction"; //set the active Command Type (activeCmd.type)
+  let  message = JSON.stringify({
+                  "jsonrpc": "2.0",
+                  "id": activeCmd.id,
+                  "method": "doSensorAction",
+                  "params": {"name": "compIt", "params":[]}
+                })
+    writeToScreen('SENT: ');
+    writeToScreen(message);
+    websocket.send(message);
+  }

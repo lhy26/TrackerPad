@@ -288,7 +288,7 @@ export function echo(name)
     writeToScreen(message);
     websocket.send(message);
   }
-*/
+
  export  function compIt()
   {
 
@@ -303,7 +303,7 @@ export function echo(name)
     writeToScreen(message);
     websocket.send(message);
   }
-
+/*
  export  function home()
   {
       idCount += 1
@@ -332,7 +332,7 @@ export function echo(name)
     writeToScreen(message);
     websocket.send(message);
   }
-
+*/
   export function initializeLeica()
   {
 

@@ -6,7 +6,14 @@ import {
     DISCONNECT_SENSOR_SUCCESSFUL,
     DISCONNECT_SENSOR_FAIL,
     MEASURE_ACTION_SUCCESSFUL,
-    MEASURE_ACTION_FAIL
+    MEASURE_ACTION_FAIL,
+    TOGGLE_SENSOR_SUCCESSFUL,
+    TOGGLE_SENSOR_FAIL,
+    HOME_ACTION_SUCCESSFUL,
+    HOME_ACTION_FAIL,
+    COMPIT_ACTION_REQUEST,
+    COMPIT_ACTION_SUCCESSFUL,
+    COMPIT_ACTION_FAIL
 } from '../actions/sensorActions';
 
 
@@ -18,7 +25,11 @@ const initialSensor = {
                 'FaroVantage',
                 'LeicaAt40x'], //all available sensor types
   isConnected: false, //check if sensor is connected
-  measureNumber: 0 //hypotetically ..counts
+  measureNumber: 0, //hypotetically ..counts the number of measurements
+  toggleNumber: 0, //counts how often the tracker toggles the sight
+  homeNumber: 0, //TODO: not sure if counting or boolean(or both)
+  compItNumber: 0 //Counts how often ...compit...you know...
+
 };
 
 /**
@@ -77,7 +88,61 @@ const sensorReducer = (state = initialSensor, action) => {
         case DISCONNECT_SENSOR_FAIL: {
           console.log('jetzt bin ich beim sensor reducer DISCONNECT_SENSOR_FAIL')
           return Object.assign({}, state,{
-            isConnected: action.response.result.successful
+            isConnected: action.error.result.successful
+          });
+        }
+
+        case TOGGLE_SENSOR_SUCCESSFUL: {
+          console.log('jetzt bin ich beim sensor reducer TOGGLE_SENSOR_SUCCESSFUL')
+          let toggleCount = state.toggleNumber;
+          if(action.response.result.successful){
+              toggleCount += 1
+          }
+          return Object.assign({}, state,{
+            toggleNumber: state.toggleNumber + 1
+          });
+        }
+        case TOGGLE_SENSOR_FAIL: {
+          console.log('jetzt bin ich beim sensor reducer TOGGLE_SENSOR_FAIL')
+          let toggleCount = state.toggleNumber;
+          return Object.assign({}, state,{
+            toggleNumber: state.toggleNumber
+          });
+        }
+
+        case HOME_ACTION_SUCCESSFUL: {
+          console.log('jetzt bin ich beim sensor reducer HOME_ACTION_SUCCESSFUL')
+          let homeCount = state.homeNumber;
+          if(action.response.result.successful){
+            homeCount += 1
+          }
+          return Object.assign({}, state,{
+              homeNumber: state.homeNumber + 1
+          });
+        }
+        case HOME_ACTION_FAIL: {
+          console.log('jetzt bin ich beim sensor reducer HOME_ACTION_FAIL')
+          let homeCount = initialSensor.homeNumber;
+          return Object.assign({}, state,{
+              homeNumber: state.homeCount
+          });
+        }
+
+        case COMPIT_ACTION_SUCCESSFUL: {
+          console.log('jetzt bin ich beim sensor reducer COMPIT_ACTION_SUCCESSFUL')
+          let compitCount = state.compItNumber;
+          if(action.response.result.successful){
+            compitCount += 1
+          }
+          return Object.assign({}, state,{
+              compItNumber: state.compItNumber + 1
+          });
+        }
+        case COMPIT_ACTION_FAIL: {
+          console.log('jetzt bin ich beim sensor reducer COMPIT_ACTION_FAIL')
+          let compItCount = initialSensor.compItNumber;
+          return Object.assign({}, state,{
+              compItNumber: state.compItCount
           });
         }
     }
