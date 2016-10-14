@@ -24,6 +24,12 @@ export const COMPIT_ACTION_REQUEST ='COMPIT_ACTION_REQUEST'
 export const COMPIT_ACTION_SUCCESSFUL ='COMPIT_ACTION_SUCCESSFUL'
 export const COMPIT_ACTION_FAIL = 'COMPIT_ACTION_FAIL'
 
+export const INIT_ACTION_REQUEST = 'INIT_ACTION_REQUEST'
+export const INIT_ACTION_SUCCESSFUL = 'INIT_ACTION_SUCCESSFUL'
+export const INIT_ACTION_FAIL = 'INIT_ACTION_FAIL'
+
+
+
 /**
  *actioncreator for the Websocket
  * @param {string} name
@@ -95,9 +101,8 @@ export function connectSensor(sensor){
 /**
 * Checks if a sensor(Tracker) is already connected,
 * then dispatches an action from below
-* @param {string} sensor
+* @param {string} isConnected
 * @param {string} error
-* @param {string} response
 */
 export function measureAction(isConnected){
   console.log ('ich bin hier bei Measuraction FUNKTION')
@@ -206,6 +211,11 @@ export function disConnectSensor(sensor){
     };
 }
 
+/**
+ *actioncreator for the toggleSensor() method
+ *action will be fired as request
+ * @param
+ */
 export function toggleSensorRequest(){
  console.log ('ich bin hier bei TOGGLE request')
  return{
@@ -213,6 +223,11 @@ export function toggleSensorRequest(){
  };
 }
 
+/**
+*actioncreator for the toggleSensor() method
+*action will be fired as response
+* @param {string} response - might be the response from the middleware
+*/
 export function toggleSensorSuccessful(response){
   console.log ('ich bin hier bei Toggle succsessful sensor ')
   console.log(response)
@@ -222,6 +237,11 @@ export function toggleSensorSuccessful(response){
   };
 }
 
+/**
+*actioncreator for the toggleSensor() method.
+*action will be fired if the toggleSensor() method fails.
+* @param {string} error
+*/
 export function toggleSensorFail(error){
  console.log ('ich bin hier bei Toggle Sensor Failure')
  return{
@@ -230,6 +250,12 @@ export function toggleSensorFail(error){
  };
 }
 
+/**
+* Checks if a sensor(Tracker) is already choosen,
+* then dispatches an action from above
+* @param {string} isConnected
+* @param {string} error
+*/
 export function toggleSensor(isConnected){
   console.log ('ich bin hier bei ToggleSensor FUNKTION')
     if ( isConnected == 'false'){
@@ -241,12 +267,23 @@ export function toggleSensor(isConnected){
     };
 }
 
+/**
+ *actioncreator for the homeAction() method
+ *action will be fired as request
+ * @param
+ */
 export function homeActionRequest(){
  console.log ('ich bin hier bei Home request')
  return{
     type:HOME_ACTION_REQUEST,
  };
 }
+
+/**
+*actioncreator for the homeAction() method
+*action will be fired as response
+* @param {string} response - might be the response from the middleware
+*/
 export function homeActionSuccessful(response){
   console.log ('homeActionSuccessful')
   console.log(response)
@@ -255,6 +292,12 @@ export function homeActionSuccessful(response){
     response
   };
 }
+
+/**
+*actioncreator for the homeAction() method.
+*action will be fired if the homeAction() method fails.
+* @param {string} error
+*/
 export function homeActionFail(error){
  console.log ('ich bin hier bei homeAction Failure')
  return{
@@ -262,6 +305,13 @@ export function homeActionFail(error){
     error
  };
 }
+
+/**
+* Checks if a sensor(Tracker) is already connected,
+* then dispatches an action from above
+* @param {string} isConnected
+* @param {string} error
+*/
 export function homeAction(isConnected){
   console.log ('ich bin hier bei Measuraction FUNKTION')
     if ( isConnected == 'false'){
@@ -273,12 +323,23 @@ export function homeAction(isConnected){
     };
 }
 
+/**
+ *actioncreator for the homeAction() method
+ *action will be fired as request
+ * @param
+ */
 export function compItActionRequest(){
  console.log ('ich bin hier bei compItActionRequest')
  return{
     type:COMPIT_ACTION_REQUEST,
  };
 }
+
+/**
+*actioncreator for the compItAction() method
+*action will be fired as response
+* @param {string} response - might be the response from the middleware
+*/
 export function compItActionSuccessful(response){
   console.log ('compItActionSuccessful')
   console.log(response)
@@ -287,6 +348,12 @@ export function compItActionSuccessful(response){
     response
   };
 }
+
+/**
+*actioncreator for the compItAction() method.
+*action will be fired if the compItAction() method fails.
+* @param {string} error
+*/
 export function compItActionFail(error){
  console.log ('ich bin hier bei compIt Failure')
  return{
@@ -294,6 +361,13 @@ export function compItActionFail(error){
     error
  };
 }
+
+/**
+* Checks if a sensor(Tracker) is already connected,
+* then dispatches an action from above
+* @param {string} isConnected
+* @param {string} error
+*/
 export function compItAction(isConnected){
   console.log ('ich bin hier bei compItAction FUNKTION')
     if ( isConnected == 'false'){
@@ -302,5 +376,61 @@ export function compItAction(isConnected){
     }
     return dispatch => {
         dispatch(compItActionRequest());
+    };
+}
+
+/**
+ *actioncreator for the initAction() method (Leica only)
+ *action will be fired as request
+ * @param
+ */
+export function initActionRequest(){
+ console.log ('ich bin hier bei initActionRequest')
+ return{
+    type:INIT_ACTION_REQUEST,
+ };
+}
+
+/**
+*actioncreator for the initAction() method (Leica only)
+*action will be fired as response
+* @param {string} response - might be the response from the middleware
+*/
+export function initActionSuccessful(response){
+  console.log ('compItActionSuccessful')
+  console.log(response)
+  return{
+    type:INIT_ACTION_SUCCESSFUL,
+    response
+  };
+}
+
+/**
+*actioncreator for the initAction() method. (Leica only )
+*action will be fired if the initAction() (really only leica) method fails.
+* @param {string} error
+*/
+export function initActionFail(error){
+ console.log ('ich bin hier bei compIt Failure')
+ return{
+    type:INIT_ACTION_FAIL,
+    error
+ };
+}
+
+/**
+* Checks if the Leica sensor(Tracker) is already connected,
+* then dispatches an action from above
+* @param {string} isConnected
+* @param {string} error
+*/
+export function initAction(isConnected){
+  console.log ('ich bin hier bei initAction FUNKTION')
+    if ( isConnected == 'false' && activeSensor == 'LeicaAt40x'){
+        let error = "Sensor not connected";
+        return dispatch => {dispatch(initActionFail(error));};
+    }
+    return dispatch => {
+        dispatch(initActionRequest());
     };
 }

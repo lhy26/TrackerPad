@@ -1,8 +1,7 @@
 import React from 'react';
 import { FormControl, Grid,Row,Col } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { setSensor, connectSensor,disconnectSensor, measureaction,
-        toggleSensor} from '../actions/sensorActions';
+import { setSensor, connectSensor,disconnectSensor} from '../actions/sensorActions';
 import {chooseMeasurementDevice, init, disconnect} from '../logic/TrackerCommands';
 import TrackerPad from './TrackerPad';
 import TrackerInput from './TrackerInput';
@@ -12,6 +11,8 @@ const mapStateToProps = (state) => {
     return{
         activeSensor: state.sensor.activeSensor,
         sensorTypes: state.sensor.sensorTypes,
+        isConnected: state.sensor.isConnected
+
 
     };
 };
@@ -19,11 +20,15 @@ const mapDispatchToProps = (dispatch) => {
     return{
 
       onSetSensor: (name) => dispatch(setSensor(name)),
+      onDisconnectSensor:() => dispatch(disconnectSensor())
+      /*
+      TODO : JMD Qualifizierten fragen ob ich die dinge hier brauche
+              eigentlich nicht oder?
       onConnectSensor:() => dispatch(connectSensor()),
-      onDisconnectSensor:() => dispatch(disconnectSensor()),
+      ,
       onMeasure:() => dispatch(measureaction()),
       onToggle:() => dispatch(toggleSensor()),
-      onCompIt:() => dispatch(compItaction())
+      onCompIt:() => dispatch(compItaction())*/
 
     };
 };
@@ -64,16 +69,13 @@ export default class TrackerUtilities extends React.Component {
             <option value={sensor} key={sensor}>{sensor}</option>
         );
     });
-
-    //console.log("trackerutils", this.props);
-
     return (
       <div>
         <Grid>
             <Row className ='show-grid' >
               <Col xs={2} md={2}>
                   <FormControl
-                  componentClass="select" placeholder="sensor type" value={this.props.activeSensor} onChange={this.handleActiveSensorChange}>
+                  componentClass="select" placeholder="sensor type" value={this.props.activeSensor} onChange={this.handleActiveSensorChange} >
                   {sensorOptions}
                   </FormControl>
               </Col>
@@ -84,12 +86,7 @@ export default class TrackerUtilities extends React.Component {
             </Row>
             <Row className = 'show-grid'>
               <Col xs={2} md={2}>
-                  <TrackerPad activeSensor = {this.props.activeSensor}
-                              connectSensor = {this.props.onConnectSensor}
-                              disconnectSensor = {this.props.onDisconnectSensor}
-                              measure = {this.props.onMeasure}
-                              toggle ={this.props.onToggle}
-                              compIt ={this.props.onCompIt}/>
+                  <TrackerPad activeSensor = {this.props.activeSensor}/>
               </Col>
               <Col xs={10} md={10}>
                   <TrackerOutput/>

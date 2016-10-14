@@ -332,7 +332,7 @@ export function echo(name)
     writeToScreen(message);
     websocket.send(message);
   }
-*/
+
   export function initializeLeica()
   {
 
@@ -349,7 +349,7 @@ export function echo(name)
     writeToScreen(messageFormatted);
     websocket.send(message);
   }
-
+*/
    export function writeToScreen(message)
   {
     //document.body.appendChild(document.createElement('output_area')).innerHTML = message;

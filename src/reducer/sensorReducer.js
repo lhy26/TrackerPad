@@ -1,6 +1,5 @@
 import {
     SET_SENSOR,
-    CONNECT_SENSOR_REQUEST,
     CONNECT_SENSOR_SUCCESSFUL,
     CONNECT_SENSOR_FAIL,
     DISCONNECT_SENSOR_SUCCESSFUL,
@@ -13,7 +12,11 @@ import {
     HOME_ACTION_FAIL,
     COMPIT_ACTION_REQUEST,
     COMPIT_ACTION_SUCCESSFUL,
-    COMPIT_ACTION_FAIL
+    COMPIT_ACTION_FAIL,
+    INIT_ACTION_REQUEST,
+    INIT_ACTION_SUCCESSFUL,
+    INIT_ACTION_FAIL
+
 } from '../actions/sensorActions';
 
 
@@ -28,8 +31,8 @@ const initialSensor = {
   measureNumber: 0, //hypotetically ..counts the number of measurements
   toggleNumber: 0, //counts how often the tracker toggles the sight
   homeNumber: 0, //TODO: not sure if counting or boolean(or both)
-  compItNumber: 0 //Counts how often ...compit...you know...
-
+  compItNumber: 0, //Counts how often ...compit...you know...
+  init: false  // checks if Leica Tracker is initialized or not (leica only)
 };
 
 /**
@@ -88,7 +91,7 @@ const sensorReducer = (state = initialSensor, action) => {
         case DISCONNECT_SENSOR_FAIL: {
           console.log('jetzt bin ich beim sensor reducer DISCONNECT_SENSOR_FAIL')
           return Object.assign({}, state,{
-            isConnected: action.error.result.successful
+            isConnected:  action.error.result.successful
           });
         }
 
@@ -102,6 +105,7 @@ const sensorReducer = (state = initialSensor, action) => {
             toggleNumber: state.toggleNumber + 1
           });
         }
+
         case TOGGLE_SENSOR_FAIL: {
           console.log('jetzt bin ich beim sensor reducer TOGGLE_SENSOR_FAIL')
           let toggleCount = state.toggleNumber;
@@ -143,6 +147,18 @@ const sensorReducer = (state = initialSensor, action) => {
           let compItCount = initialSensor.compItNumber;
           return Object.assign({}, state,{
               compItNumber: state.compItCount
+          });
+        }
+        case INIT_ACTION_SUCCESSFUL: {
+          console.log('jetzt bin ich beim sensor reducer INIT_ACTION_SUCCESSFUL')
+          return Object.assign({}, state,{
+            init: action.response.result.successful
+          });
+        }
+        case INIT_ACTION_FAIL: {
+          console.log('jetzt bin ich beim sensor reducer INIT_ACTION_FAIL')
+          return Object.assign({}, state,{
+            init:action.error.result.successful
           });
         }
     }

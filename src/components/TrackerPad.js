@@ -12,7 +12,6 @@ export default class TrackerPad extends React.Component {
 
   render() {
   	 if(this.props.activeSensor == 'FaroIon'){
-       console.log("trackerpad", this.props)
 	  	 return (
 	        <FaroIonButtons connectSensor={() => {this.props.OnconnectSensor}} />
 	      );

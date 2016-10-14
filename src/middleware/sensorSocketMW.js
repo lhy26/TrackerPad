@@ -4,7 +4,8 @@ import {connectSensorRequest,connectSensorSuccessful,connectSensorFail,
         disConnectSensorRequest,disConnectSensorSuccessful,disConnectSensorFail,
         toggleSensorRequest,toggleSensorSuccessful,toggleSensorFail,
         homeActionRequest,homeActionSuccessful,homeActionFail,
-        compItActionRequest,compItActionSuccessful,compItActionFail
+        compItActionRequest,compItActionSuccessful,compItActionFail,
+        initActionRequest,initActionSuccessful,initActionFail
        } from '../actions/sensorActions';
 import {
      CONNECT_SENSOR_REQUEST,
@@ -31,7 +32,12 @@ import {
 
      COMPIT_ACTION_REQUEST,
      COMPIT_ACTION_SUCCESSFUL,
-     COMPIT_ACTION_FAIL
+     COMPIT_ACTION_FAIL,
+
+     INIT_ACTION_REQUEST,
+     INIT_ACTION_SUCCESSFUL,
+     INIT_ACTION_FAIL
+
 
 
 } from '../actions/sensorActions';
@@ -102,49 +108,59 @@ export const initWebSocket = (store) => {
          store.dispatch(measureActionFail(response));
          return;
        }
-       //Block which handle´s the Toggle Sight Button Response
+     //Block which handle´s the Toggle Sight Button Response
      }else if (activeCmd.type == 'doSensorAction' && activeCmd.id == response.id){
-         console.log('onmessage toggle')
-         if(response.result.successful){
-           store.dispatch(toggleSensorSuccessful(response));
-           return;
-         }else{
-           store.dispatch(toggleSensorFail(response));
-           return;
-         }
-        //Block wich handle´s the Home Butto Response
-     }else if (activeCmd.type == 'doSensorAction' && activeCmd.id == response.id){
-            console.log('onmessage home')
-            if(response.result.successful){
-              store.dispatch(HomeActionSuccessful(response));
-              return;
-            }else{
-              store.dispatch(HomeActionFail(response));
-              return;
-            }
-    //Block wich handle´s the CompIt Butto Response
-     }else if (activeCmd.type == 'doSensorAction' && activeCmd.id == response.id){
-             console.log('onmessage compIt')
-             if(response.result.successful){
-               store.dispatch(compItActionSuccessful(response));
-               return;
-             }else{
-               store.dispatch(compItActionFail(response));
-               return;
-               }
-    }else{
+       console.log('onmessage toggle')
+       if(response.result.successful){
+         store.dispatch(toggleSensorSuccessful(response));
+         return;
+       }else{
+         store.dispatch(toggleSensorFail(response));
+         return;
+       }
 
-      console.log("onmessage aufgerufen4");
+     //Block wich handle´s the Home Button Response
+     }else if (activeCmd.type == 'doSensorAction' && activeCmd.id == response.id){
+       console.log('onmessage home')
+       if(response.result.successful){
+         store.dispatch(HomeActionSuccessful(response));
+         return;
+       }else{
+         store.dispatch(HomeActionFail(response));
+         return;
+       }
+     //Block wich handle´s the CompIt Button Response
+     }else if (activeCmd.type == 'doSensorAction' && activeCmd.id == response.id){
+       console.log('onmessage compIt')
+       if(response.result.successful){
+         store.dispatch(compItActionSuccessful(response));
+         return;
+       }else{
+         store.dispatch(compItActionFail(response));
+         return;
+       }
+     //Block wich handle´s the Init (Leica Only )Button Response
+     }else if (activeCmd.type == 'doSensorAction' && activeCmd.id == response.id){
+       console.log('onmessage init')
+       if(response.result.successful){
+         store.dispatch(initActionSuccessful(response));
+         return;
+       }else{
+         store.dispatch(initActionFail(response));
+         return;
+       }
+     }else{
+       console.log("onmessage aufgerufen4");
      }
    }
 
-     /* socket Connection callbacks
-     set local const to functions with the value 'evt'*/
-     websocket = new WebSocket("ws://127.0.0.1:8090")
-     websocket.onopen = function(evt) { onOpen(evt) };
-     websocket.onclose = function(evt) { onClose(evt) };
-     websocket.onmessage = function(evt) { onMessage(evt) };
-     websocket.onerror = function(evt) { onError(evt) };
+   /* socket Connection callbacks
+   set local const to functions with the value 'evt'*/
+   websocket = new WebSocket("ws://127.0.0.1:8090")
+   websocket.onopen = function(evt) { onOpen(evt) };
+   websocket.onclose = function(evt) { onClose(evt) };
+   websocket.onmessage = function(evt) { onMessage(evt) };
+   websocket.onerror = function(evt) { onError(evt) };
 }
 
 /**
@@ -157,7 +173,7 @@ export  const sensorSocketMiddleware = store => next => action => {
     //init local var
     const result = next(action);
 
-    //react on specific actions
+    //react on specific actions. actions descripted in the sensorAction.js
     switch(action.type){
         case CONNECT_SENSOR_REQUEST: {
           console.log('jetzt bin ich beim middleware gedöns')
@@ -191,6 +207,11 @@ export  const sensorSocketMiddleware = store => next => action => {
         case COMPIT_ACTION_REQUEST: {
           console.log('MW COMPIT_ACTION_REQUEST')
           compIt();
+            break;
+        }
+        case INIT_ACTION_REQUEST: {
+          console.log('MW INIT_ACTION_REQUEST')
+          initializeLeica();
             break;
         }
 
@@ -283,6 +304,11 @@ function measure(){
   websocket.send(message);
 
 }
+/**
+ *Sends Request(Object) to the webservice which tell the "backend" the Tracker
+ * shall toggle from frontside to backside
+ * @param
+ */
 function toggle(){
 
   //set up script variables
@@ -299,6 +325,11 @@ function toggle(){
   websocket.send(message);
 }
 
+/**
+ *Sends Request(Object) to the webservice which tell the "backend" the Tracker
+ * shall go to home position (Faro only)
+ * @param
+ */
 function home(){
   //set up script variables
   activeCmd.id = activeCmd.id+1; //sum up 1 to the local variable idCount
@@ -314,7 +345,13 @@ function home(){
    websocket.send(message);
  }
 
+ /**
+  *Sends Request(Object) to the webservice which tell the "backend" the Tracker
+  * shall make a compensation position (Faro only)
+  * @param
+  */
 function compIt(){
+
   //set up script variables
   activeCmd.id = activeCmd.id+1; //sum up 1 to the local variable idCount
   activeCmd.type = "doSensorAction"; //set the active Command Type (activeCmd.type)
@@ -326,5 +363,23 @@ function compIt(){
                 })
     writeToScreen('SENT: ');
     writeToScreen(message);
+    websocket.send(message);
+  }
+
+function initializeLeica(){
+
+  //set up script variables
+  activeCmd.id = activeCmd.id+1; //sum up 1 to the local variable idCount
+  activeCmd.type = "doSensorAction"; //set the active Command Type (activeCmd.type)
+  let  message = JSON.stringify({
+                  "jsonrpc": "2.0",
+                  "id": activeCmd.id,
+                  "method": "doSensorAction",
+                  "params": {"name": "initialize", "params":[]}
+                })
+
+    var messageFormatted = JSON.stringify(JSON.parse(message),null,2);
+    writeToScreen('SENT: ');
+    writeToScreen(messageFormatted);
     websocket.send(message);
   }
