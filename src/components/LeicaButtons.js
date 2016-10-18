@@ -2,7 +2,9 @@ import React from 'react';
 import { Button,  ButtonGroup } from 'react-bootstrap';
 import {connect} from "react-redux";
 import {connectSensor, disConnectSensor, measureAction,toggleSensor,
-        initAction} from '../actions/sensorActions'
+        initAction} from '../actions/sensorActions';
+import {trackerHandleActiveSensorChange} from '../actions/trackerUtilActions'
+
 
 /**
  *dispatches the store´s states to property´s(so it can be used here)
@@ -28,7 +30,8 @@ const mapDispatchToProps = dispatch => {
         onMeasureRequest: () => dispatch(measureAction()),
         onDisConnectSensorRequest: () => dispatch(disConnectSensor()),
         onToggleRequest: () => dispatch(toggleSensor()),
-        onInitRequest: () => dispatch(initAction())
+        onInitRequest: () => dispatch(initAction()),
+        onTrackerHandleActiveSensorChangeRequest:() => dispatch(trackerHandleActiveSensorChange())
     };
 };
 
@@ -43,13 +46,10 @@ export default class LeicaAt40xButtons extends React.Component{
    	}
 
 
-
-
-
 	render() {
 	    return (
 	    	<ButtonGroup vertical>
-          <Button onClick={() => this.props.onConnectSensorRequest()}>connect</Button>
+          <Button onClick={() => this.props.onTrackerHandleActiveSensorChangeRequest()}>connect</Button>
           <Button onClick={() => this.props.onDisConnectSensorRequest()}>disconnect</Button>
           <Button onClick={() => this.props.onMeasureRequest()}>measure</Button>
           <Button onClick={() => this.props.onToggleRequest()}>toggle</Button>
@@ -58,3 +58,4 @@ export default class LeicaAt40xButtons extends React.Component{
     	);
   	}
 }
+//this.props.onConnectSensorRequest(),

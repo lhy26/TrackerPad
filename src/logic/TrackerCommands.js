@@ -2,7 +2,7 @@
  export var activeSensor = "";
  export var idCount = 0;
  export var websocket;
- export var sensorServiceConnected = false;
+ //export var sensorServiceConnected = false;
  export var pointList = [];
 
 export function echo(name)
@@ -16,7 +16,7 @@ export function echo(name)
     testWebSocket();
   }
 
-  export function testWebSocket()
+  /*export function testWebSocket()
   {
     console.log("websocket aufgerufen");
     websocket = new WebSocket(wsUri);
@@ -49,7 +49,7 @@ export function echo(name)
 
     writeToScreen('<span style="color: blue;">RESPONSE: ' + evt.data + '</span>');
   }
-
+*/
   /**
   *
   *
@@ -64,13 +64,13 @@ export function echo(name)
   {
     input = document.getElementById("input");
     var message = input.value;
-  //  outputMsg.appendChild("SENTttttttttttttt");
+    outputMsg.appendChild("SENTttttttttttttt");
     writeToScreen('SENT: ');
   	writeToScreen(message);
     websocket.send(message);
   }
 
-  export function chooseMeasurementDevice(sensor,socket)
+/*  export function chooseMeasurementDevice(sensor,socket)
   {
     websocket = socket;
     if(sensor == 'FaroIon'){
@@ -81,7 +81,7 @@ export function echo(name)
       chooseLeica();
     }
   }
-
+*/
   export function doFaceCheck(){
     console.log("doFaceCheck aufgerufen")
     measure();
@@ -103,7 +103,7 @@ export function echo(name)
 
 
   }
-
+/*
   function chooseLeica()
   {
 	console.log("chooseLeica ufgerufen");
@@ -240,7 +240,7 @@ export function echo(name)
     writeToScreen(message);
     websocket.send(message);
     //document.body.appendChild(document.createElement('pre')).innerHTML = message;
-  }
+  }*/
 /*
   export function connect()
   {

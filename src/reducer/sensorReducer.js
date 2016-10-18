@@ -1,5 +1,10 @@
 import {
-    SET_SENSOR,
+    CHOOSE_FAROION_SUCCESSFUL,
+    CHOOSE_FAROION_FAIL,
+    CHOOSE_VANTAGE_SUCCESSFUL,
+    CHOOSE_VANTAGE_FAIL,
+    CHOOSE_LEICA_SUCCESSFUL,
+    CHOOSE_LEICA_FAIL,
     CONNECT_SENSOR_SUCCESSFUL,
     CONNECT_SENSOR_FAIL,
     DISCONNECT_SENSOR_SUCCESSFUL,
@@ -17,6 +22,7 @@ import {
     INIT_ACTION_SUCCESSFUL,
     INIT_ACTION_FAIL
 
+
 } from '../actions/sensorActions';
 
 
@@ -32,7 +38,7 @@ const initialSensor = {
   toggleNumber: 0, //counts how often the tracker toggles the sight
   homeNumber: 0, //TODO: not sure if counting or boolean(or both)
   compItNumber: 0, //Counts how often ...compit...you know...
-  init: false  // checks if Leica Tracker is initialized or not (leica only)
+  init: false,  // checks if Leica Tracker is initialized or not (leica only)
 };
 
 /**
@@ -45,9 +51,34 @@ const initialSensor = {
 const sensorReducer = (state = initialSensor, action) => {
     switch(action.type){
         // set new sensor
-        case SET_SENSOR: {
+        case CHOOSE_FAROION_SUCCESSFUL: {
             return Object.assign({}, state,  {
-                activeSensor: action.newActiveSensor,
+                activeSensor: 'FaroIon'
+            });
+        }
+        case CHOOSE_FAROION_FAIL: {
+            return Object.assign({}, state,  {
+                activeSensor: 'none'
+            });
+        }
+        case CHOOSE_VANTAGE_SUCCESSFUL: {
+            return Object.assign({}, state,  {
+                activeSensor: 'FaroVantage'
+            });
+        }
+        case CHOOSE_VANTAGE_FAIL: {
+            return Object.assign({}, state,  {
+                activeSensor: 'none'
+            });
+        }
+        case CHOOSE_LEICA_SUCCESSFUL: {
+            return Object.assign({}, state,  {
+                activeSensor: 'LeicaAt40x'
+            });
+        }
+        case CHOOSE_LEICA_FAIL: {
+            return Object.assign({}, state,  {
+                activeSensor: 'none'
             });
         }
 
@@ -126,7 +157,7 @@ const sensorReducer = (state = initialSensor, action) => {
         }
         case HOME_ACTION_FAIL: {
           console.log('jetzt bin ich beim sensor reducer HOME_ACTION_FAIL')
-          let homeCount = initialSensor.homeNumber;
+          let homeCount = state.homeNumber;
           return Object.assign({}, state,{
               homeNumber: state.homeCount
           });
@@ -144,7 +175,7 @@ const sensorReducer = (state = initialSensor, action) => {
         }
         case COMPIT_ACTION_FAIL: {
           console.log('jetzt bin ich beim sensor reducer COMPIT_ACTION_FAIL')
-          let compItCount = initialSensor.compItNumber;
+          let compItCount = state.compItNumber;
           return Object.assign({}, state,{
               compItNumber: state.compItCount
           });

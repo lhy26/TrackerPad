@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormControl, Grid,Row,Col } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { setSensor, connectSensor,disconnectSensor} from '../actions/sensorActions';
+import {setSensor , connectSensor,disConnectSensor} from '../actions/sensorActions';
 import {chooseMeasurementDevice, init, disconnect} from '../logic/TrackerCommands';
 import TrackerPad from './TrackerPad';
 import TrackerInput from './TrackerInput';
@@ -11,6 +11,8 @@ const mapStateToProps = (state) => {
     return{
         activeSensor: state.sensor.activeSensor,
         sensorTypes: state.sensor.sensorTypes,
+        isConnected: state.sensor.isConnected
+
 
     };
 };
@@ -18,7 +20,8 @@ const mapDispatchToProps = (dispatch) => {
     return{
 
       onSetSensor: (name) => dispatch(setSensor(name)),
-      onDisconnectSensor:() => dispatch(disconnectSensor())
+      onDisConnectSensor:() => dispatch(disConnectSensor())
+
       /*
       TODO : JMD Qualifizierten fragen ob ich die dinge hier brauche
               eigentlich nicht oder?
@@ -49,11 +52,11 @@ export default class TrackerUtilities extends React.Component {
 
   handleActiveSensorChange(e){
       if(this.props.activeSensor != 'none'){
+        this.props.onDisConnectSensor(e);
          return;
-         this.props.onDisConnectSensor();
       }
 
-  //   if(sensorServiceConnected == true){
+    //    if(sensorServiceConnected == true){
         this.setState({activeSensor: e.target.value});
         this.props.onSetSensor(e.target.value);
         //chooseMeasurementDevice(e.target.value);
@@ -62,7 +65,6 @@ export default class TrackerUtilities extends React.Component {
   }
 
   render() {
-
     const sensorOptions = this.props.sensorTypes.map(function(sensor){
         return(
             <option value={sensor} key={sensor}>{sensor}</option>
@@ -74,7 +76,7 @@ export default class TrackerUtilities extends React.Component {
             <Row className ='show-grid' >
               <Col xs={2} md={2}>
                   <FormControl
-                  componentClass="select" placeholder="sensor type" value={this.props.activeSensor} onChange={this.handleActiveSensorChange}>
+                  componentClass="select" placeholder="sensor type" value={this.props.activeSensor} onChange={this.handleActiveSensorChange} disabled={this.props.isConnected}>
                   {sensorOptions}
                   </FormControl>
               </Col>

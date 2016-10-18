@@ -29,7 +29,7 @@ const mapDispatchToProps = dispatch => {
         onDisConnectSensorRequest: () => dispatch(disConnectSensor()),
         onToggleRequest: () => dispatch(toggleSensor()),
         onHomeRequest:() => dispatch(homeAction()),
-        onCompItRequest:() => dispatch(compItAction())
+        onCompItRequest:() => dispatch(compItAction()),
     };
 };
 

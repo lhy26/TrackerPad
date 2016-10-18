@@ -1,4 +1,6 @@
-export const SET_SENSOR = 'SET_SENSOR'
+export const SET_SENSOR_REQUEST = 'SET_SENSOR_REQUEST'
+export const SET_SENSOR_SUCCESSFUL ='SET_SENSOR_SUCCESSFUL'
+export const SET_SENSOR_FAIL ='SET_SENSOR_SUCCESSFUL'
 
 export const CONNECT_SENSOR_REQUEST='CONNECT_SENSOR_REQUEST'
 export const CONNECT_SENSOR_SUCCESSFUL='CONNECT_SENSOR_SUCCESSFUL'
@@ -28,19 +30,104 @@ export const INIT_ACTION_REQUEST = 'INIT_ACTION_REQUEST'
 export const INIT_ACTION_SUCCESSFUL = 'INIT_ACTION_SUCCESSFUL'
 export const INIT_ACTION_FAIL = 'INIT_ACTION_FAIL'
 
+export const CHOOSE_FAROION_REQUEST ='CHOOSE_FAROION_REQUEST'
+export const CHOOSE_FAROION_SUCCESSFUL= 'CHOOSE_FAROION_SUCCESSFUL'
+export const CHOOSE_FAROION_FAIL= 'CHOOSE_FAROION_FAIL'
+
+export const CHOOSE_VANTAGE_REQUEST= 'CHOOSE_VANTAGE_REQUEST'
+export const CHOOSE_VANTAGE_SUCCESSFUL= 'CHOOSE_VANTAGE_SUCCESSFUL'
+export const CHOOSE_VANTAGE_FAIL= 'CHOOSE_VANTAGE_FAIL'
+
+export const CHOOSE_LEICA_REQUEST = 'CHOOSE_LEICA_REQUEST'
+export const CHOOSE_LEICA_SUCCESSFUL = 'CHOOSE_LEICA_SUCCESSFUL'
+export const CHOOSE_LEICA_FAIL = 'CHOOSE_LEICA_FAIL'
 
 
-/**
- *actioncreator for the Websocket
- * @param {string} name
- */
-export function setSensor(name){
+export function setSensor(sensor){
+  console.log ('ich bin hier bei SET sensor FUNKTION')
+  if(sensor == 'FaroIon'){
+    return dispatch => {dispatch(chooseFaroIonRequest());}
+  }else if (sensor == 'FaroVantage') {
+    return dispatch =>{dispatch(chooseFaroVantageRequest());}
+  }else if (sensor == 'LeicaAt40x') {
+    return dispatch =>{dispatch(chooseLeicaRequest());}
+  }
+  else{
+    let error = "There´s something wrong ";
+    return dispatch => {dispatch(setSensorFail(error));}
+  };
+}
+export function chooseFaroIonRequest(){
+      console.log ('ich bin hier bei chooseFaroIonRequest')
   return{
-    type:SET_SENSOR,
-    newActiveSensor: name
+    type:CHOOSE_FAROION_REQUEST,
+    
+
+  };
+}
+export function chooseFaroIonSuccessful(response){
+      console.log('hier bin ich beim faroionsuccesfull')
+  return{
+    type:CHOOSE_FAROION_SUCCESSFUL,
+    response
+  };
+}
+export function chooseFaroIonFail(error){
+      console.log('hier bin ich beim FAROIONFAIL')
+  return{
+    type:CHOOSE_FAROION_FAIL,
+    error
   };
 }
 
+export function chooseFaroVantageRequest(){
+      console.log ('ich bin hier bei chooseFaroVantageRequest')
+  return{
+    type:CHOOSE_VANTAGE_REQUEST
+  };
+}
+export function chooseFaroVantageSuccessful(response){
+      console.log('hier bin cih beim chooseFaroVantageSuccessful')
+  return{
+    type:CHOOSE_VANTAGE_SUCCESSFUL,
+    response
+  };
+}
+export function chooseFaroVantageFail(error){
+      console.log('hier bin cih beim FAROIONFAIL')
+  return{
+    type:CHOOSE_VANTAGE_FAIL,
+    error
+  }
+}
+
+export function chooseLeicaRequest(){
+        console.log ('ich bin hier bei CHOOSE_LEICA_REQUEST')
+        return{
+          type:CHOOSE_LEICA_REQUEST
+        };
+}
+export function chooseLeicaSuccessful(response){
+      console.log('hier bin cih beim CHOOSE_LEICA_SUCCESSFUL')
+  return{
+    type:CHOOSE_LEICA_SUCCESSFUL,
+    response
+  };
+}
+export function chooseLeicaFail(error){
+      console.log('hier bin cih beim CHOOSE_LEICA_FAIL')
+  return{
+    type:CHOOSE_LEICA_FAIL,
+    error
+  };
+}
+export function setSensorFail(error){
+ console.log ('ich bin hier bei setSensorFail Failure')
+ return{
+    type:SET_SENSOR_FAIL,
+    error
+ };
+}
 /**
  *actioncreator for the connectSensor() method
  *action will be fired as request
@@ -49,7 +136,7 @@ export function setSensor(name){
 export function connectSensorRequest(){
  console.log ('ich bin hier bei Connect sensor request')
  return{
-    type:CONNECT_SENSOR_REQUEST,
+    type:CONNECT_SENSOR_REQUEST
  };
 }
 

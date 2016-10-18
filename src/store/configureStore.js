@@ -28,10 +28,10 @@ export default function configureStore(preloadedState) {
 
     const store = createStore(
         rootReducer,
-        preloadedState,
+        preloadedState, 
         compose(
           applyMiddleware(logger,thunkMiddleware,sensorSocketMiddleware, error),
-          //window.devToolsExtension ? window.devToolsExtension() : f => f // for debugging in a browser
+          window.devToolsExtension ? window.devToolsExtension() : f => f // for debugging in a browser
         )
     );
     store.subscribe(() =>{

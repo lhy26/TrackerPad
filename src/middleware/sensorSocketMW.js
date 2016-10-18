@@ -1,5 +1,7 @@
-import {chooseMeasurementDevice} from '../logic/TrackerCommands'
-import {connectSensorRequest,connectSensorSuccessful,connectSensorFail,
+import {chooseFaroIonRequest,chooseFaroIonSuccessful,chooseFaroIonFail,
+        chooseFaroVantageRequest,chooseFaroVantageSuccessful,chooseFaroVantageFail,
+        chooseLeicaRequest,chooseLeicaSuccessful,chooseLeicaFail,
+        connectSensorRequest,connectSensorSuccessful,connectSensorFail,
         measureActionRequest,measureActionSuccessful,measureActionFail,
         disConnectSensorRequest,disConnectSensorSuccessful,disConnectSensorFail,
         toggleSensorRequest,toggleSensorSuccessful,toggleSensorFail,
@@ -7,6 +9,8 @@ import {connectSensorRequest,connectSensorSuccessful,connectSensorFail,
         compItActionRequest,compItActionSuccessful,compItActionFail,
         initActionRequest,initActionSuccessful,initActionFail
        } from '../actions/sensorActions';
+/*import {sensorChangeRequest,sensorChangeSuccessful,sensorChangeFail
+       }from '../actions/trackerUtilActions'*/
 import {
      CONNECT_SENSOR_REQUEST,
      CONNECT_SENSOR_SUCCESSFUL,
@@ -16,7 +20,17 @@ import {
      DISCONNECT_SENSOR_SUCCESSFUL,
      DISCONNECT_SENSOR_FAIL,
 
-     SET_SENSOR,
+     CHOOSE_FAROION_REQUEST,
+     CHOOSE_FAROION_SUCCESSFUL,
+     CHOOSE_FAROION_FAIL,
+
+     CHOOSE_VANTAGE_REQUEST,
+     CHOOSE_VANTAGE_SUCCESSFUL,
+     CHOOSE_VANTAGE_FAIL,
+
+     CHOOSE_LEICA_REQUEST,
+     CHOOSE_LEICA_FAIL,
+     CHOOSE_LEICA_SUCCESSFUL,
 
      MEASURE_ACTION_REQUEST,
      MEASURE_ACTION_SUCCESSFUL,
@@ -36,12 +50,8 @@ import {
 
      INIT_ACTION_REQUEST,
      INIT_ACTION_SUCCESSFUL,
-     INIT_ACTION_FAIL
-
-
-
+     INIT_ACTION_FAIL,
 } from '../actions/sensorActions';
-
 //script variables
 let activeCmd = {id:0, type:''}
 let websocket ;
@@ -75,6 +85,19 @@ export const initWebSocket = (store) => {
    //dispatch specific action to trigger update
    const onMessage = (evt) =>{
      var response = JSON.parse(evt.data);
+
+     if(response == null){
+       //dispatch sensorErrorAction('sensor response is null')
+       console.log('sensor response is null');
+       return;
+     }
+
+     if(response.hasOwnProperty('error')){
+       //dispatch sensorErrorAction(response.error.errorMsg)
+       console.log(response.error.errorMsg);
+       return;
+     }
+
      //checks if Cmd.Type is right and if evt.data.id matchs with activeCmd.id
      if(activeCmd.type == 'connect' && activeCmd.id == response.id){
        console.log("onmessage connect");
@@ -108,7 +131,7 @@ export const initWebSocket = (store) => {
          return;
        }
      //Block which handle´s the Toggle Sight Button Response
-   }else if (activeCmd.type == 'toggle' && activeCmd.id == response.id){
+     }else if (activeCmd.type == 'toggle' && activeCmd.id == response.id){
        console.log('onmessage toggle')
        if(response.result.successful){
          store.dispatch(toggleSensorSuccessful(response));
@@ -119,13 +142,13 @@ export const initWebSocket = (store) => {
        }
 
      //Block wich handle´s the Home Button Response
-   }else if (activeCmd.type == 'home' && activeCmd.id == response.id){
+     }else if (activeCmd.type == 'home' && activeCmd.id == response.id){
        console.log('onmessage home')
        if(response.result.successful){
-         store.dispatch(HomeActionSuccessful(response));
+         store.dispatch(homeActionSuccessful(response));
          return;
        }else{
-         store.dispatch(HomeActionFail(response));
+         store.dispatch(homeActionFail(response));
          return;
        }
      //Block wich handle´s the CompIt Button Response
@@ -139,7 +162,7 @@ export const initWebSocket = (store) => {
          return;
        }
      //Block wich handle´s the Init (Leica Only )Button Response
-   }else if (activeCmd.type == 'init' && activeCmd.id == response.id){
+     }else if (activeCmd.type == 'init' && activeCmd.id == response.id){
        console.log('onmessage init')
        if(response.result.successful){
          store.dispatch(initActionSuccessful(response));
@@ -148,6 +171,33 @@ export const initWebSocket = (store) => {
          store.dispatch(initActionFail(response));
          return;
        }
+     }else if (activeCmd.type == 'chooseFaroIon' && activeCmd.id == response.id){
+       console.log('onmessage chooseFaroIon')
+       if(!response.hasOwnProperty('error')){
+         store.dispatch(chooseFaroIonSuccessful(response));
+         return;
+       }else{
+         store.dispatch(chooseFaroIonFail(response));
+         return;
+       }
+     }else if (activeCmd.type == 'chooseFaroVantage' && activeCmd.id == response.id){
+       console.log('onmessage chooseFaroVantage')
+       if(!response.hasOwnProperty('error')){
+         store.dispatch(chooseFaroVantageSuccessful(response));
+         return;
+       }else{
+         store.dispatch(chooseFaroVantageFail(response));
+         return;
+       }
+     }else if (activeCmd.type == 'chooseLeica' && activeCmd.id == response.id){
+         console.log('onmessage chooseLeica')
+         if(!response.hasOwnProperty('error')){
+           store.dispatch(chooseLeicaSuccessful(response));
+           return;
+         }else{
+           store.dispatch(chooseleicaFail(response));
+           return;
+         }
      }else{
        console.log("onmessage aufgerufen4");
      }
@@ -184,8 +234,19 @@ export  const sensorSocketMiddleware = store => next => action => {
             disconnect();
             break;
         }
-        case SET_SENSOR: {
-          chooseMeasurementDevice(action.newActiveSensor , websocket);
+        case CHOOSE_FAROION_REQUEST: {
+          console.log('MW CHOOSE_FAROION_REQUEST')
+          chooseFaroIon();
+            break;
+        }
+        case CHOOSE_VANTAGE_REQUEST: {
+          console.log('MW CHOOSE_VANTAGE_REQUEST')
+          chooseFaroVantage();
+            break;
+        }
+        case CHOOSE_LEICA_REQUEST: {
+          console.log('MW CHOOSE_LEICA_REQUEST')
+          chooseLeica();
             break;
         }
         case MEASURE_ACTION_REQUEST: {
@@ -213,7 +274,6 @@ export  const sensorSocketMiddleware = store => next => action => {
           initializeLeica();
             break;
         }
-
     }
 
     return result;
@@ -382,3 +442,141 @@ function initializeLeica(){
     writeToScreen(messageFormatted);
     websocket.send(message);
   }
+
+function chooseFaroIon()
+  {
+    //set up script variables
+    activeCmd.id = activeCmd.id+1; //sum up 1 to the local variable idCount
+    activeCmd.type = "chooseFaroIon"; //set the active Command Type (activeCmd.type)
+    const message = JSON.stringify({
+                "jsonrpc": "2.0",
+                "id": activeCmd.id,
+                "method": "getSensor",
+                "params": {
+                  "name": "FaroLaserTracker",
+                  "parameter": {
+                         "sensorParameter": [{
+                              "name": "connection",
+                              "properties": {
+                                  "trackerType": "ion",
+                                  "ip": "192.168.168.241"
+                              },
+                              "trackerTypes": ["ion",
+                                               "vantage"
+                              ]
+                          }, {
+                              "name": "probe",
+                              "properties": {
+                                  "activeProbe": "1.5",
+                                  "probes": ["0.5",
+                                             "7/8",
+                                             "1.5"]
+                              }
+                          }, {
+                              "name": "distanceMode",
+                              "properties": {
+                                  "activeDistanceMode": "ADMOnly",
+                                  "distanceModes": ["ADMOnly",
+                                                    "InterferometerOnly",
+                                                    "InterferometerSetByADM"]
+                              }
+                          }]
+                  }
+                }
+              }, undefined, 4)
+
+    websocket.send(message);
+    writeToScreen('SENT: ');
+    writeToScreen(message);
+  }
+
+function chooseFaroVantage(){
+
+    //set up script variables
+    activeCmd.id = activeCmd.id+1; //sum up 1 to the local variable idCount
+    activeCmd.type = "chooseFaroVantage"; //set the active Command Type (activeCmd.type)
+    const message = JSON.stringify({
+                "jsonrpc": "2.0",
+                "id": activeCmd.id,
+                "method": "getSensor",
+                "params": {
+                  "name": "FaroLaserTracker",
+                  "parameter": {
+                         "sensorParameter": [{
+                              "name": "connection",
+                              "properties": {
+                                  "trackerType": "vantage",
+                                  "ip": "128.128.128.100"
+                              },
+                              "trackerTypes": ["ion",
+                                               "vantage"
+                              ]
+                          }, {
+                              "name": "probe",
+                              "properties": {
+                                  "activeProbe": "1.5",
+                                  "probes": ["0.5",
+                                             "7/8",
+                                             "1.5"]
+                              }
+                          }, {
+                              "name": "distanceMode",
+                              "properties": {
+                                  "activeDistanceMode": "ADMOnly",
+                                  "distanceModes": ["ADMOnly",
+                                                    "InterferometerOnly",
+                                                    "InterferometerSetByADM"]
+                              }
+                          }]
+                  }
+                }
+              }, undefined, 4)
+    writeToScreen('SENT: ');
+    writeToScreen(message);
+    websocket.send(message);
+}
+function chooseLeica(){
+      //set up script variables
+      activeCmd.id = activeCmd.id+1; //sum up 1 to the local variable idCount
+      activeCmd.type = "chooseLeica"; //set the active Command Type (activeCmd.type)
+  const message = JSON.stringify({
+              "jsonrpc": "2.0",
+              "id": activeCmd.type,
+              "method": "getSensor",
+              "params": {
+                "name": "LeicaLaserTracker",
+                "parameter": {
+                      "sensorParameter": [{
+                      "name": "connection",
+                      "properties": {
+                        "ip": "192.168.0.1",
+                        "port": 700
+                      }
+                    }, {
+                      "name": "probe",
+                      "properties": {
+                        "activeProbe": "RRR15",
+                        "probes": ["RRR15",
+                          "RRR05",
+                          "RRR0875",
+                          "glass prism"
+                        ]
+                      }
+                    }, {
+                      "name": "measureMode",
+                      "properties": {
+                        "activeMeasureMode": "fast",
+                        "MeasureModes": ["fast",
+                          "standard",
+                          "precise",
+                          "stationary"
+                        ]
+                      }
+                    }]
+                }
+              }
+            })
+  writeToScreen('SENT: ');
+  writeToScreen(message);
+  websocket.send(message);
+}
