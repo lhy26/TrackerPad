@@ -195,7 +195,7 @@ export const initWebSocket = (store) => {
            store.dispatch(chooseLeicaSuccessful(response));
            return;
          }else{
-           store.dispatch(chooseleicaFail(response));
+           store.dispatch(chooseLeicaFail(response));
            return;
          }
      }else{
@@ -536,12 +536,13 @@ function chooseFaroVantage(){
     websocket.send(message);
 }
 function chooseLeica(){
+  console.log('ich bin hier bei choose leica')
       //set up script variables
       activeCmd.id = activeCmd.id+1; //sum up 1 to the local variable idCount
       activeCmd.type = "chooseLeica"; //set the active Command Type (activeCmd.type)
   const message = JSON.stringify({
               "jsonrpc": "2.0",
-              "id": activeCmd.type,
+              "id": activeCmd.id,
               "method": "getSensor",
               "params": {
                 "name": "LeicaLaserTracker",

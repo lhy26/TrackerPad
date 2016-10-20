@@ -1,6 +1,6 @@
 export const SET_SENSOR_REQUEST = 'SET_SENSOR_REQUEST'
 export const SET_SENSOR_SUCCESSFUL ='SET_SENSOR_SUCCESSFUL'
-export const SET_SENSOR_FAIL ='SET_SENSOR_SUCCESSFUL'
+export const SET_SENSOR_FAIL ='SET_SENSOR_FAIL'
 
 export const CONNECT_SENSOR_REQUEST='CONNECT_SENSOR_REQUEST'
 export const CONNECT_SENSOR_SUCCESSFUL='CONNECT_SENSOR_SUCCESSFUL'
@@ -61,7 +61,7 @@ export function chooseFaroIonRequest(){
       console.log ('ich bin hier bei chooseFaroIonRequest')
   return{
     type:CHOOSE_FAROION_REQUEST,
-    
+
 
   };
 }
@@ -103,8 +103,8 @@ export function chooseFaroVantageFail(error){
 
 export function chooseLeicaRequest(){
         console.log ('ich bin hier bei CHOOSE_LEICA_REQUEST')
-        return{
-          type:CHOOSE_LEICA_REQUEST
+  return{
+    type:CHOOSE_LEICA_REQUEST
         };
 }
 export function chooseLeicaSuccessful(response){

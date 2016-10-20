@@ -159,7 +159,7 @@ const sensorReducer = (state = initialSensor, action) => {
           console.log('jetzt bin ich beim sensor reducer HOME_ACTION_FAIL')
           let homeCount = state.homeNumber;
           return Object.assign({}, state,{
-              homeNumber: state.homeCount
+              homeNumber: state.homeNumber
           });
         }
 
@@ -177,7 +177,7 @@ const sensorReducer = (state = initialSensor, action) => {
           console.log('jetzt bin ich beim sensor reducer COMPIT_ACTION_FAIL')
           let compItCount = state.compItNumber;
           return Object.assign({}, state,{
-              compItNumber: state.compItCount
+              compItNumber: state.compItNumber
           });
         }
         case INIT_ACTION_SUCCESSFUL: {

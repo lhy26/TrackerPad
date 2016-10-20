@@ -3,7 +3,7 @@ import { Button,  ButtonGroup } from 'react-bootstrap';
 import {connect} from "react-redux";
 import {connectSensor, disConnectSensor, measureAction,toggleSensor,
         initAction} from '../actions/sensorActions';
-import {trackerHandleActiveSensorChange} from '../actions/trackerUtilActions'
+//import {trackerHandleActiveSensorChange} from '../actions/trackerUtilActions'
 
 
 /**
@@ -49,7 +49,7 @@ export default class LeicaAt40xButtons extends React.Component{
 	render() {
 	    return (
 	    	<ButtonGroup vertical>
-          <Button onClick={() => this.props.onTrackerHandleActiveSensorChangeRequest()}>connect</Button>
+          <Button onClick={() => this.props.onConnectSensorRequest()}>connect</Button>
           <Button onClick={() => this.props.onDisConnectSensorRequest()}>disconnect</Button>
           <Button onClick={() => this.props.onMeasureRequest()}>measure</Button>
           <Button onClick={() => this.props.onToggleRequest()}>toggle</Button>

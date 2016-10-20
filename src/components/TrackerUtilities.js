@@ -2,7 +2,6 @@ import React from 'react';
 import { FormControl, Grid,Row,Col } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import {setSensor , connectSensor,disConnectSensor} from '../actions/sensorActions';
-import {chooseMeasurementDevice, init, disconnect} from '../logic/TrackerCommands';
 import TrackerPad from './TrackerPad';
 import TrackerInput from './TrackerInput';
 import TrackerOutput from './TrackerOutput';
@@ -11,7 +10,9 @@ const mapStateToProps = (state) => {
     return{
         activeSensor: state.sensor.activeSensor,
         sensorTypes: state.sensor.sensorTypes,
-        isConnected: state.sensor.isConnected
+        isConnected: state.sensor.isConnected,
+        trackerConnected: state.tracker.trackerConnected,
+        anotherState: state.tracker.anotherState
 
 
     };
@@ -43,25 +44,20 @@ export default class TrackerUtilities extends React.Component {
     this.handleActiveSensorChange = this.handleActiveSensorChange.bind(this);
 
   }
-//If the Webpage refreshes!? the page initialize with the webserve(Qt) automatically
-  componentDidMount(){
- //init();
 
-  //   chooseMeasurementDevice(this.props.activeSensor);
+  componentDidMount(){
+
+
+
   }
 
   handleActiveSensorChange(e){
-      if(this.props.activeSensor != 'none'){
+      if(this.props.isConnected =='true' && this.props.activeSensor != 'none'){
         this.props.onDisConnectSensor(e);
          return;
       }
-
-    //    if(sensorServiceConnected == true){
         this.setState({activeSensor: e.target.value});
         this.props.onSetSensor(e.target.value);
-        //chooseMeasurementDevice(e.target.value);
-      //}
-
   }
 
   render() {
