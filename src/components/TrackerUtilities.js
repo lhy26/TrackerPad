@@ -11,6 +11,7 @@ const mapStateToProps = (state) => {
         activeSensor: state.sensor.activeSensor,
         sensorTypes: state.sensor.sensorTypes,
         isConnected: state.sensor.isConnected,
+        //trackerconnected and another state are for testing second reducer
         trackerConnected: state.tracker.trackerConnected,
         anotherState: state.tracker.anotherState
 
@@ -46,8 +47,6 @@ export default class TrackerUtilities extends React.Component {
   }
 
   componentDidMount(){
-
-
 
   }
 

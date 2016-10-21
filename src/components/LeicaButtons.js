@@ -58,4 +58,3 @@ export default class LeicaAt40xButtons extends React.Component{
     	);
   	}
 }
-//this.props.onConnectSensorRequest(),

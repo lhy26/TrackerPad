@@ -171,6 +171,7 @@ export const initWebSocket = (store) => {
          store.dispatch(initActionFail(response));
          return;
        }
+      //Block wich handle´s the ChooseFaroIOn  Response
      }else if (activeCmd.type == 'chooseFaroIon' && activeCmd.id == response.id){
        console.log('onmessage chooseFaroIon')
        if(!response.hasOwnProperty('error')){
@@ -180,6 +181,7 @@ export const initWebSocket = (store) => {
          store.dispatch(chooseFaroIonFail(response));
          return;
        }
+       //Block wich handle´s the ChoosefaroVantage Response
      }else if (activeCmd.type == 'chooseFaroVantage' && activeCmd.id == response.id){
        console.log('onmessage chooseFaroVantage')
        if(!response.hasOwnProperty('error')){
@@ -189,6 +191,7 @@ export const initWebSocket = (store) => {
          store.dispatch(chooseFaroVantageFail(response));
          return;
        }
+       //Block wich handle´s the chooseLeica Response
      }else if (activeCmd.type == 'chooseLeica' && activeCmd.id == response.id){
          console.log('onmessage chooseLeica')
          if(!response.hasOwnProperty('error')){
@@ -424,7 +427,11 @@ function compIt(){
     writeToScreen(message);
     websocket.send(message);
   }
-
+  /**
+   *Sends Request(Object) to the webservice which tell the "backend" the Tracker
+   * shall make a initialize Leica (Leica only)
+   * @param
+   */
 function initializeLeica(){
 
   //set up script variables
@@ -442,7 +449,11 @@ function initializeLeica(){
     writeToScreen(messageFormatted);
     websocket.send(message);
   }
-
+  /**
+   *Sends Request(Object) to the webservice which tell the "backend" the Tracker
+   * the Tracker you choose is FaroIOn
+   * @param
+   */
 function chooseFaroIon()
   {
     //set up script variables
@@ -489,9 +500,12 @@ function chooseFaroIon()
     writeToScreen('SENT: ');
     writeToScreen(message);
   }
-
+  /**
+   *Sends Request(Object) to the webservice which tell the "backend" the Tracker
+   * the Tracker you choose is FaroVantage
+   * @param
+   */
 function chooseFaroVantage(){
-
     //set up script variables
     activeCmd.id = activeCmd.id+1; //sum up 1 to the local variable idCount
     activeCmd.type = "chooseFaroVantage"; //set the active Command Type (activeCmd.type)
@@ -535,7 +549,12 @@ function chooseFaroVantage(){
     writeToScreen(message);
     websocket.send(message);
 }
-function chooseLeica(){
+/**
+ *Sends Request(Object) to the webservice which tell the "backend" the Tracker
+ * the Tracker you choose is The leica Tracker
+ * @param
+ */
+ function chooseLeica(){
   console.log('ich bin hier bei choose leica')
       //set up script variables
       activeCmd.id = activeCmd.id+1; //sum up 1 to the local variable idCount
@@ -580,4 +599,8 @@ function chooseLeica(){
   writeToScreen('SENT: ');
   writeToScreen(message);
   websocket.send(message);
+}
+export function doFaceCheck(){
+  console.log("doFaceCheck aufgerufen")
+  console.log(store.getState());
 }
