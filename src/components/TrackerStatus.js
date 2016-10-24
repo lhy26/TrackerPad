@@ -7,9 +7,8 @@ import {OverlayTrigger, Tooltip} from 'react-bootstrap'
  *
  */
 const mapStateToProps = state => {
+  isConnected: state.sensor.isConnected
     return{
-      activeSensor:state.sensor.activeSensor,
-      isConnected:state.sensor.isConnected
     };
 };
 
@@ -45,6 +44,7 @@ export default class TrackerStatus extends React.Component{
             return(
           <Button bsStyle="danger">not connected</Button>
             )
+
           }
 
       }

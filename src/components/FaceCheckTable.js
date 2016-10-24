@@ -5,11 +5,8 @@ import { Table } from 'react-bootstrap';
 
 const mapStateToProps = (state) => {
     return{
-        activeSensor: state.sensor.activeSensor,
-        sensorTypes: state.sensor.sensorTypes,
-        isConnected: state.sensor.isConnected,
-
-
+      tracker: state.tracker,
+      activeSensor: state.sensor.activeSensor
     };
 };
 const mapDispatchToProps = (dispatch) => {
@@ -40,15 +37,21 @@ export default class FaceCheckTable extends React.Component{
         <tbody>
           <tr>
             <td>FS</td>
-            <td>123456789</td>
-            <td>123456798</td>
-            <td>123456798</td>
+            <td>{this.props.tracker.fs.a}</td>
+            <td>{this.props.tracker.fs.z}</td>
+            <td>{this.props.tracker.fs.d}</td>
           </tr>
           <tr>
             <td>BS</td>
-            <td>132456798</td>
-            <td>132456798</td>
-            <td>123456798</td>
+            <td>{this.props.tracker.bs.a}</td>
+            <td>{this.props.tracker.bs.z}</td>
+            <td>{this.props.tracker.bs.d}</td>
+          </tr>
+          <tr>
+            <td>Result</td>
+            <td>FS-BS</td>
+            <td>FS-BS</td>
+            <td>FS-BS</td>
           </tr>
         </tbody>
       </Table>

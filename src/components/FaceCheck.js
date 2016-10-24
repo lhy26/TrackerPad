@@ -1,17 +1,26 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import {Button, Grid, Row, Col, FormControl} from 'react-bootstrap';
 import {doFaceCheck, pointList} from '../middleware/sensorSocketMW'
 import FaceCheckTable from './FaceCheckTable';
 import TrackerOutput from './TrackerOutput';
 import TrackerStatus from './TrackerStatus';
 
+
 const mapStateToProps = state => {
     return{
-      activeSensor:state.sensor.activeSensor,
-      isConnected:state.sensor.isConnected
+      tracker: state.tracker,
+      activeSensor: state.sensor.activeSensor
     };
 };
 
+const mapDispatchToProps = (dispatch) => {
+    return{
+
+    };
+};
+
+@connect(mapStateToProps, mapDispatchToProps)
 export default class FaceCheck extends React.Component {
     constructor(props) {
         super(props);
@@ -24,14 +33,13 @@ export default class FaceCheck extends React.Component {
                 <Col xs={2} md={2}>
 
                 </Col>
-
                 <Col xs={2} md={2}>
-                    <FaceCheckTable/>
+                    <FaceCheckTable tracker = {this.props.tracker}/>
                 </Col>
               </Row>
               <Row className = 'show-grid'>
                 <Col xs={2} md={2}>
-                    <TrackerStatus />
+                    <TrackerStatus tracker = {this.props.tracker}/>
                 </Col>
                 <Col xs={10} md={10}>
                     <TrackerOutput/>

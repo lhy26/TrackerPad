@@ -1,16 +1,16 @@
-export const SENSOR_CHANGE_REQUEST='CONNECT_SENSOR_REQUEST'
-export const SENSOR_CHANGE_SUCCESSFUL='CONNECT_SENSOR_SUCCESSFUL'
-export const SENSOR_CHANGE_FAIL = 'CONNECT_SENSOR_FAIL'
+export const BS_CHECK_REQUEST='BS_CHECK_REQUEST'
+export const BS_CHECK_SUCCESSFULL='BS_CHECK_SUCCESSFULL'
+export const BS_CHECK_FAIL = 'BS_CHECK_FAIL'
 
 /**
  *actioncreator for the trackerHandleActiveSensorChange() method
  *action will be fired as request
  * @param
  */
-export function sensorChangeRequest(){
+export function bSCheckRequest(){
  console.log ('ich bin hier bei sensorChangeRequest')
  return{
-    type:SENSOR_CHANGE_REQUEST,
+    type:BS_CHECK_REQUEST,
  };
 }
 
@@ -19,11 +19,11 @@ export function sensorChangeRequest(){
 *action will be fired as response
 * @param {string} response - might be the response from the middleware
 */
-export function sensorChangeSuccessful(response){
-  console.log ('ich bin hier bei sensorChangeSuccessful')
+export function bSCheckSuccessful(response){
+  console.log ('ich bin hier bei BSCheckSuccessful')
   console.log(response)
   return{
-    type:SENSOR_CHANGE_SUCCESSFUL,
+    type:BS_CHECK_SUCCESSFULL,
     response
   };
 }
@@ -33,10 +33,10 @@ export function sensorChangeSuccessful(response){
 *action will be fired if the sensorChange fails.
 * @param {string} error
 */
-export function sensorChangeFail(error){
- console.log ('ich bin hier bei Connect sensor Failure')
+export function bSCheckFail(error){
+ console.log ('ich bin hier bei CBSCheckFail')
  return{
-    type:SENSOR_CHANGE_FAIL,
+    type:BS_CHECK_FAIL,
     error
  };
 }
@@ -49,12 +49,12 @@ export function sensorChangeFail(error){
 * @param {string} error
 * @param {string} response
 */
-export function trackerHandleActiveSensorChange(trackerConnected){
+export function BSCheck(trackerConnected){
   console.log ('ich bin hier bei handleActiveSensorChange FUNKTION')
-    if (trackerConnected == true){
-        let error = "Tracker already connected. Please disconnect first";
-        return dispatch => {dispatch(sensorChangeFail(error));};
+    if (isConnected == false){
+        let error = "Tracker not connected. Please connect first ffs";
+        return dispatch => {dispatch(bSCheckFail(error));};
     }
-        return dispatch => {dispatch(sensorChangeSuccessful(response));
+        return dispatch => {dispatch(bSCheckRequest(response));
     };
 }

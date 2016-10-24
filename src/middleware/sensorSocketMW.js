@@ -9,8 +9,8 @@ import {chooseFaroIonRequest,chooseFaroIonSuccessful,chooseFaroIonFail,
         compItActionRequest,compItActionSuccessful,compItActionFail,
         initActionRequest,initActionSuccessful,initActionFail
        } from '../actions/sensorActions';
-/*import {sensorChangeRequest,sensorChangeSuccessful,sensorChangeFail
-       }from '../actions/trackerUtilActions'*/
+import {bSCheckRequest,bSCheckSuccessful,bSCheckFail
+       }from '../actions/trackerUtilActions'
 import {
      CONNECT_SENSOR_REQUEST,
      CONNECT_SENSOR_SUCCESSFUL,
@@ -52,6 +52,9 @@ import {
      INIT_ACTION_SUCCESSFUL,
      INIT_ACTION_FAIL,
 } from '../actions/sensorActions';
+import {BS_CHECK_REQUEST,
+       BS_CHECK_SUCCESSFULL,
+       BS_CHECK_FAIL} from '../actions/trackerUtilActions'
 //script variables
 let activeCmd = {id:0, type:''}
 let websocket ;
@@ -201,6 +204,15 @@ export const initWebSocket = (store) => {
            store.dispatch(chooseLeicaFail(response));
            return;
          }
+    }else if (activeCmd.type == 'chooseLeica' && activeCmd.id == response.id){
+       console.log('onmessage chooseLeica')
+       if(!response.hasOwnProperty('error')){
+          store.dispatch(bSCheckSuccessful(response));
+          return;
+         }else{
+          store.dispatch(bSCheckFail(response));
+               return;
+             }
      }else{
        console.log("onmessage aufgerufen4");
      }
@@ -276,13 +288,16 @@ export  const sensorSocketMiddleware = store => next => action => {
           console.log('MW INIT_ACTION_REQUEST')
           initializeLeica();
             break;
+
         }
+        case BS_CHECK_REQUEST: {
+          console.log('MW BS_CHECK_REQUEST')
+          doFaceCheck();
+            break;
     }
-
     return result;
-
 };
-
+}
 /**
  * Sends parameters(a RequestObject) to the webservice which
  *  establish/enable a connection between trackerpad and tracker
@@ -600,7 +615,9 @@ function chooseFaroVantage(){
   writeToScreen(message);
   websocket.send(message);
 }
-export function doFaceCheck(){
+/*function doFaceCheck(){
   console.log("doFaceCheck aufgerufen")
-  console.log(store.getState());
-}
+    measure();
+    toggle();
+    measure();
+}*/
