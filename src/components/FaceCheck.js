@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {Button, Grid, Row, Col, FormControl} from 'react-bootstrap';
-import {doFaceCheck, pointList} from '../middleware/sensorSocketMW'
+import {BSCheck} from '../actions/trackerUtilActions';
 import FaceCheckTable from './FaceCheckTable';
 import TrackerOutput from './TrackerOutput';
 import TrackerStatus from './TrackerStatus';
@@ -16,7 +16,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
     return{
-
+      onBSCheck:() => dispatch(BSCheck())
     };
 };
 
@@ -31,7 +31,7 @@ export default class FaceCheck extends React.Component {
           <Grid>
               <Row className ='show-grid' >
                 <Col xs={2} md={2}>
-
+                  <Button onClick={() => this.props.onBSCheck()}>le Backsight Check</Button>
                 </Col>
                 <Col xs={2} md={2}>
                     <FaceCheckTable tracker = {this.props.tracker}/>

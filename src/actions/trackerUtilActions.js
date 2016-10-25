@@ -2,6 +2,7 @@ export const BS_CHECK_REQUEST='BS_CHECK_REQUEST'
 export const BS_CHECK_SUCCESSFULL='BS_CHECK_SUCCESSFULL'
 export const BS_CHECK_FAIL = 'BS_CHECK_FAIL'
 
+import {measureAction, toggleSensor} from './sensorActions'
 /**
  *actioncreator for the trackerHandleActiveSensorChange() method
  *action will be fired as request
@@ -49,12 +50,11 @@ export function bSCheckFail(error){
 * @param {string} error
 * @param {string} response
 */
-export function BSCheck(trackerConnected){
-  console.log ('ich bin hier bei handleActiveSensorChange FUNKTION')
-    if (isConnected == false){
-        let error = "Tracker not connected. Please connect first ffs";
-        return dispatch => {dispatch(bSCheckFail(error));};
-    }
-        return dispatch => {dispatch(bSCheckRequest(response));
-    };
+export function BSCheck(){
+  console.log('ich bin hier bei BSCheck Funktion')
+  return dispatch => Promise.all([
+    dispatch(measureAction()),
+    dispatch(toggleSensor()),
+    dispatch(measureAction())
+  ]);
 }

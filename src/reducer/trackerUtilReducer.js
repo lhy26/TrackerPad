@@ -4,7 +4,7 @@ import{BS_CHECK_REQUEST,
 from '../actions/trackerUtilActions'
 
 const initialTracker = {
-  doBScheck:0
+  doBScheck:0,
     fs:{
       a:'hello',
       z:'is it me',

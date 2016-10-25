@@ -214,7 +214,7 @@ export const initWebSocket = (store) => {
                return;
              }
      }else{
-       console.log("onmessage aufgerufen4");
+       console.log("onmessage aufgerufen 4");
      }
    }
 
@@ -615,9 +615,3 @@ function chooseFaroVantage(){
   writeToScreen(message);
   websocket.send(message);
 }
-/*function doFaceCheck(){
-  console.log("doFaceCheck aufgerufen")
-    measure();
-    toggle();
-    measure();
-}*/
