@@ -204,14 +204,14 @@ export const initWebSocket = (store) => {
            store.dispatch(chooseLeicaFail(response));
            return;
          }
-    }else if (activeCmd.type == 'chooseLeica' && activeCmd.id == response.id){
-       console.log('onmessage chooseLeica')
+    }else if (activeCmd.type == 'BSCheck' && activeCmd.id == response.id){
+       console.log('onmessage BSCheck')
        if(!response.hasOwnProperty('error')){
           store.dispatch(bSCheckSuccessful(response));
           return;
          }else{
           store.dispatch(bSCheckFail(response));
-               return;
+          return;
              }
      }else{
        console.log("onmessage aufgerufen 4");
@@ -292,7 +292,7 @@ export  const sensorSocketMiddleware = store => next => action => {
         }
         case BS_CHECK_REQUEST: {
           console.log('MW BS_CHECK_REQUEST')
-          doFaceCheck();
+          BSCheck();
             break;
     }
     return result;
@@ -615,3 +615,21 @@ function chooseFaroVantage(){
   writeToScreen(message);
   websocket.send(message);
 }
+/*export function BSCheck(){
+console.log ('bs check funktion ganz weit unten in der middleware')
+    console.log ('noch einmal weiter unten')
+    return fetchData().then(
+    measure => dispatch(measureActionRequest()),
+    error =>dispatch(measureActionFail())
+      )
+
+  function fetchData(){
+    console.log ('wird fetch data aufgerufen???')
+    return fetch(websocket)
+  }
+
+  console.log ('bs check funktion ganz weit unten in der middleware')
+  activeCmd.type = "BSCheck";
+
+}
+*/

@@ -174,10 +174,10 @@ export function connectSensorFail(error){
 * @param {string} error
 * @param {string} response
 */
-export function connectSensor(sensor){
+export function connectSensor(activeSensor){
   console.log ('ich bin hier bei Connect sensor FUNKTION')
-    if (sensor == 'none'){
-        let error = "no Sensor chosen";
+    if (activeSensor == 'none'){
+        let error = "Puh, that shouldnt happened, good luck,you are f*****";
         return dispatch => {dispatch(connectSensorFail(error));};
     }
     return dispatch => {
@@ -193,7 +193,7 @@ export function connectSensor(sensor){
 */
 export function measureAction(isConnected){
   console.log ('ich bin hier bei Measuraction FUNKTION')
-    if ( isConnected == 'false'){
+    if ( isConnected == false){
         let error = "Sensor not connected";
         return dispatch => {dispatch(measureActionFail(error));};
     }
@@ -208,7 +208,7 @@ export function measureAction(isConnected){
  * @param
  */
 export function measureActionRequest(){
- console.log ('ich bin hier bei measur Action request')
+ console.log ('ich bin hier bei measure Action request')
  return{
     type:MEASURE_ACTION_REQUEST,
  };
@@ -287,14 +287,14 @@ export function disConnectSensorFail(error){
 * @param {string} error
 * @param {string} response
 */
-export function disConnectSensor(sensor){
+export function disConnectSensor(activeSensor,error,sensor){
   console.log ('ich bin hier bei DisConnect sensor FUNKTION')
-    if (sensor == 'none'){
+    if (activeSensor == 'none'){
         let error = "no Sensor chosen";
         return dispatch => {dispatch(disConnectSensorFail(error));};
     }
     return dispatch => {
-        dispatch(disConnectSensorRequest(sensor));
+        dispatch(disConnectSensorRequest());
     };
 }
 
@@ -345,7 +345,7 @@ export function toggleSensorFail(error){
 */
 export function toggleSensor(isConnected){
   console.log ('ich bin hier bei ToggleSensor FUNKTION')
-    if ( isConnected == 'false'){
+    if ( isConnected == false){
         let error = "no Sensor connected";
         return dispatch => {dispatch(toggleSensorFail(error));};
     }
@@ -401,7 +401,7 @@ export function homeActionFail(error){
 */
 export function homeAction(isConnected){
   console.log ('ich bin hier bei Measuraction FUNKTION')
-    if ( isConnected == 'false'){
+    if ( isConnected == false){
         let error = "Sensor not connected";
         return dispatch => {dispatch(homeActionFail(error));};
     }
@@ -457,7 +457,7 @@ export function compItActionFail(error){
 */
 export function compItAction(isConnected){
   console.log ('ich bin hier bei compItAction FUNKTION')
-    if ( isConnected == 'false'){
+    if ( isConnected == false){
         let error = "Sensor not connected";
         return dispatch => {dispatch(compItActionFail(error));};
     }
@@ -513,7 +513,7 @@ export function initActionFail(error){
 */
 export function initAction(isConnected){
   console.log ('ich bin hier bei initAction FUNKTION')
-    if ( isConnected == 'false' && activeSensor == 'LeicaAt40x'){
+    if ( isConnected == false && activeSensor == 'LeicaAt40x'){
         let error = "Sensor not connected";
         return dispatch => {dispatch(initActionFail(error));};
     }

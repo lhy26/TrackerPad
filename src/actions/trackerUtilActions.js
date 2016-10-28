@@ -2,14 +2,14 @@ export const BS_CHECK_REQUEST='BS_CHECK_REQUEST'
 export const BS_CHECK_SUCCESSFULL='BS_CHECK_SUCCESSFULL'
 export const BS_CHECK_FAIL = 'BS_CHECK_FAIL'
 
-import {measureAction, toggleSensor} from './sensorActions'
+import {measureAction,measureActionRequest,measureActionResponse,measureActionFail} from './sensorActions'
 /**
  *actioncreator for the trackerHandleActiveSensorChange() method
  *action will be fired as request
  * @param
  */
 export function bSCheckRequest(){
- console.log ('ich bin hier bei sensorChangeRequest')
+ console.log ('ich bin hier bei bSCheckRequest')
  return{
     type:BS_CHECK_REQUEST,
  };
@@ -50,11 +50,19 @@ export function bSCheckFail(error){
 * @param {string} error
 * @param {string} response
 */
-export function BSCheck(){
-  console.log('ich bin hier bei BSCheck Funktion')
-  return dispatch => Promise.all([
-    dispatch(measureAction()),
-    dispatch(toggleSensor()),
-    dispatch(measureAction())
-  ]);
-}
+/*export function BSCheck(){
+  console.log ('bs check funktion ganz weit unten in der middleware')
+      console.log ('noch einmal weiter unten')
+      return fetchData().then(
+      measure => dispatch(measureActionRequest()),
+      error =>dispatch(measureActionFail())
+        )
+
+    function fetchData(){
+      console.log ('wird fetch data aufgerufen???')
+      return fetch()
+    }
+
+    console.log ('bs check funktion ganz weit unten in der middleware')
+    activeCmd.type = "BSCheck";
+  }*/

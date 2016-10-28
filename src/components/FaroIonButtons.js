@@ -11,6 +11,14 @@ import {connectSensor, disConnectSensor, measureAction,toggleSensor,
 const mapStateToProps = state => {
     return{
       //store variable -> syntax x = store.x
+      activeSensor: state.sensor.activeSensor,
+      sensorTypes: state.sensor.sensorTypes,
+      isConnected: state.sensor.isConnected,
+      measureNumber:state.sensor.measureNumber,
+      toggleNumber:state.sensor.toggleNumber,
+      homeNumber:state.sensor.homeNumber,
+      compItNumber:state.sensor.compItNumber,
+      init:state.sensor.init
     };
 };
 
@@ -24,12 +32,12 @@ const mapStateToProps = state => {
  */
 const mapDispatchToProps = dispatch => {
     return{
-        onConnectSensorRequest: () => dispatch(connectSensor()),
-        onMeasureRequest: () => dispatch(measureAction()),
-        onDisConnectSensorRequest: () => dispatch(disConnectSensor()),
-        onToggleRequest: () => dispatch(toggleSensor()),
-        onHomeRequest:() => dispatch(homeAction()),
-        onCompItRequest:() => dispatch(compItAction()),
+        onConnectSensorRequest: (activeSensor) => dispatch(connectSensor(activeSensor)),
+        onMeasureRequest: (isConnected) => dispatch(measureAction(isConnected)),
+        onDisConnectSensorRequest: (activeSensor) => dispatch(disConnectSensor(activeSensor)),
+        onToggleRequest: (isConnected) => dispatch(toggleSensor(isConnected)),
+        onHomeRequest:(isConnected) => dispatch(homeAction(isConnected)),
+        onCompItRequest:(isConnected) => dispatch(compItAction(isConnected)),
     };
 };
 
@@ -50,12 +58,12 @@ export default class FaroIonButtons extends React.Component{
 	render() {
 	    return (
 	    	<ButtonGroup vertical>
-	   			<Button onClick={() => this.props.onConnectSensorRequest()}>connect</Button>
-	   			<Button onClick={() => this.props.onDisConnectSensorRequest()}>disconnect</Button>
-	   			<Button onClick={() => this.props.onMeasureRequest()}>measure</Button>
-	   			<Button onClick={() => this.props.onToggleRequest()}>toggle</Button>
-	   			<Button onClick={() => this.props.onHomeRequest()}>home</Button>
-          <Button onClick={() => this.props.onCompItRequest()}>compIt</Button>
+	   			<Button onClick={() => this.props.onConnectSensorRequest(this.props.activeSensor)}>connect</Button>
+	   			<Button onClick={() => this.props.onDisConnectSensorRequest(this.props.activeSensor)}>disconnect</Button>
+	   			<Button onClick={() => this.props.onMeasureRequest(this.props.isConnected)}>measure</Button>
+	   			<Button onClick={() => this.props.onToggleRequest(this.props.isConnected)}>toggle</Button>
+	   			<Button onClick={() => this.props.onHomeRequest(this.props.isConnected)}>home</Button>
+          <Button onClick={() => this.props.onCompItRequest(this.props.isConnected)}>compIt</Button>
 	   		</ButtonGroup>
     	);
   	}

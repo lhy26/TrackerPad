@@ -109,7 +109,7 @@ const sensorReducer = (state = initialSensor, action) => {
           console.log('jetzt bin ich beim sensor reducer MEASUR_ACTION_FAIL')
           let measCount = initialSensor.measureNumber;
           return Object.assign({}, state,{
-              measureNumber: measCount
+              measureNumber:  state.measureNumber - 1
           });
         }
 

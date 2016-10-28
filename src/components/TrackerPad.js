@@ -13,7 +13,7 @@ export default class TrackerPad extends React.Component {
   render() {
   	 if(this.props.activeSensor == 'FaroIon'){
 	  	 return (
-	        <FaroIonButtons connectSensor={() => {this.props.OnconnectSensor}} />
+	        <FaroIonButtons connectSensor={() => {this.props.isConnected}} />
 	      );
   	 }else if(this.props.activeSensor == 'LeicaAt40x'){
   	 	  return (

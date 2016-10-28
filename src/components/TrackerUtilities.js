@@ -11,6 +11,13 @@ const mapStateToProps = (state) => {
         activeSensor: state.sensor.activeSensor,
         sensorTypes: state.sensor.sensorTypes,
         isConnected: state.sensor.isConnected,
+        measureNumber:state.sensor.measureNumber,
+        toggleNumber:state.sensor.toggleNumber,
+        homeNumber:state.sensor.homeNumber,
+        compItNumber:state.sensor.compItNumber,
+        init:state.sensor.init
+
+
 
 
 
@@ -20,7 +27,7 @@ const mapDispatchToProps = (dispatch) => {
     return{
 
       onSetSensor: (name) => dispatch(setSensor(name)),
-      onDisConnectSensor:() => dispatch(disConnectSensor())
+  
 
       /*
       TODO : JMD Qualifizierten fragen ob ich die dinge hier brauche
@@ -80,7 +87,13 @@ export default class TrackerUtilities extends React.Component {
             </Row>
             <Row className = 'show-grid'>
               <Col xs={2} md={2}>
-                  <TrackerPad activeSensor = {this.props.activeSensor}/>
+                  <TrackerPad activeSensor = {this.props.activeSensor}
+                              isConnected ={this.props.isConnected}
+                              measureNumber={this.props.measureNumber}
+                              toggleNumber={this.props.toggleNumber}
+                              homeNumber={this.props.homeNumber}
+                              compItNumber={this.props.compItNumber}
+                              init={this.props.init}/>
               </Col>
               <Col xs={10} md={10}>
                   <TrackerOutput/>
