@@ -9,7 +9,7 @@ import {chooseFaroIonRequest,chooseFaroIonSuccessful,chooseFaroIonFail,
         compItActionRequest,compItActionSuccessful,compItActionFail,
         initActionRequest,initActionSuccessful,initActionFail
        } from '../actions/sensorActions';
-import {bSCheckRequest,bSCheckSuccessful,bSCheckFail
+import {changeMeasurementConfigRequest,changeMeasurementConfigSuccessful,changeMeasurementConfigFail
        }from '../actions/trackerUtilActions'
 import {
      CONNECT_SENSOR_REQUEST,
@@ -52,9 +52,9 @@ import {
      INIT_ACTION_SUCCESSFUL,
      INIT_ACTION_FAIL,
 } from '../actions/sensorActions';
-import {BS_CHECK_REQUEST,
-       BS_CHECK_SUCCESSFULL,
-       BS_CHECK_FAIL} from '../actions/trackerUtilActions'
+import {CHANGE_MEASUREMENT_CONFIG_REQUEST,
+       CHANGE_MEASUREMENT_CONFIG_SUCCESSFULL,
+       CHANGE_MEASUREMENT_CONFIG_FAIL} from '../actions/trackerUtilActions'
 //script variables
 let activeCmd = {id:0, type:''}
 let websocket ;
@@ -204,15 +204,16 @@ export const initWebSocket = (store) => {
            store.dispatch(chooseLeicaFail(response));
            return;
          }
-    }else if (activeCmd.type == 'BSCheck' && activeCmd.id == response.id){
-       console.log('onmessage BSCheck')
+       //Block wich handle´s the BS Check Response
+    }else if (activeCmd.type == 'changeMeasurementConfig' && activeCmd.id == response.id){
+       console.log('onmessage changeMeasurementConfig')
        if(!response.hasOwnProperty('error')){
-          store.dispatch(bSCheckSuccessful(response));
-          return;
-         }else{
-          store.dispatch(bSCheckFail(response));
-          return;
-             }
+         store.dispatch(changeMeasurementConfigSuccessful(response));
+         return;
+       }else{
+         store.dispatch(changeMeasurementConfigFail(response));
+         return;
+       }
      }else{
        console.log("onmessage aufgerufen 4");
      }
@@ -290,9 +291,9 @@ export  const sensorSocketMiddleware = store => next => action => {
             break;
 
         }
-        case BS_CHECK_REQUEST: {
+        case CHANGE_MEASUREMENT_CONFIG_REQUEST: {
           console.log('MW BS_CHECK_REQUEST')
-          BSCheck();
+          changeMeasurementConfig();
             break;
     }
     return result;
@@ -615,21 +616,33 @@ function chooseFaroVantage(){
   writeToScreen(message);
   websocket.send(message);
 }
-/*export function BSCheck(){
-console.log ('bs check funktion ganz weit unten in der middleware')
-    console.log ('noch einmal weiter unten')
-    return fetchData().then(
-    measure => dispatch(measureActionRequest()),
-    error =>dispatch(measureActionFail())
-      )
-
-  function fetchData(){
-    console.log ('wird fetch data aufgerufen???')
-    return fetch(websocket)
+function changeMeasurementConfig(){
+  console.log ('changeMeasurementConfig funktion ganz weit unten in der middleware')
+    activeCmd.id = activeCmd.id+1; //sum up 1 to the local variable idCount
+    activeCmd.type = "changeMeasurementConfig"; //set the active Command Type (activeCmd.type) to connect
+    const message = JSON.stringify( { "jsonrpc": "2.0", "method": "setMeasurementConfig","id": activeCmd.id, "params": {
+       "readingType": "polar",
+       "measureType": "singlePoint",
+       "measurementConfig": [{
+           "name": "singlePoint",
+           "properties": {
+               "frequency": 1000,
+               "iteration": 1,
+               "measureTwoSides": true
+           }
+       }, {
+           "name": "scan",
+           "properties": {
+               "scanMethod": "distance",
+               "frequency": 1,
+               "count": 1000,
+               "delta": 0.001,
+               "scanMethods": ["distance",
+                               "time"]
+           }
+       }], }
+  })
+    writeToScreen('SENT: ');
+    writeToScreen(message);
+    websocket.send(message);
   }
-
-  console.log ('bs check funktion ganz weit unten in der middleware')
-  activeCmd.type = "BSCheck";
-
-}
-*/

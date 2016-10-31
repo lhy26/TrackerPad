@@ -7,8 +7,10 @@ import {OverlayTrigger, Tooltip} from 'react-bootstrap'
  *
  */
 const mapStateToProps = state => {
-  isConnected: state.sensor.isConnected
     return{
+      isConnected: state.sensor.isConnected,
+      changeMeasurementConfig: state.tracker.changeMeasurementConfig,
+      home: state.sensor.homeNumber
     };
 };
 
@@ -34,18 +36,39 @@ export default class TrackerStatus extends React.Component{
   constructor(props) {
     	super(props);
    	}
-
 	render() {
-          if (this.props.isConnected == true){
+          if (this.props.isConnected === true && this.props.changeMeasurementConfig == 'double'){
             return(
-            <Button bsStyle="success">connected</Button>
+              <ButtonGroup vertical>
+                <Button bsStyle="success">connected</Button>
+                <Button bsStyle="success">double measurment</Button>
+                <Button >homeNumberino = {this.props.home} </Button>
+              </ButtonGroup>
             )
+
+          }else if(this.props.isConnected === true && this.props.changeMeasurementConfig == 'single'){
+            return(
+              <ButtonGroup vertical>
+                <Button bsStyle="success">connected</Button>
+                <Button bsStyle="danger">single measurment</Button>
+                <Button >homeNumberino = {this.props.home} </Button>
+              </ButtonGroup>
+            )
+          }else if(this.props.isConnected === false && this.props.changeMeasurementConfig == 'double'){
+            return(
+              <ButtonGroup vertical>
+                <Button bsStyle="danger">not connected</Button>
+                <Button bsStyle="success">double measurment</Button>
+                <Button >homeNumberino = {this.props.home} </Button>
+              </ButtonGroup>
+              )
           }else{
             return(
-          <Button bsStyle="danger">not connected</Button>
-            )
-
-          }
-
+              <ButtonGroup vertical>
+                  <Button bsStyle="danger">not connected</Button>
+                  <Button bsStyle="danger">single measurment</Button>
+                  <Button >homeNumberino = {this.props.home} </Button>
+              </ButtonGroup>
+          )}
       }
   	}

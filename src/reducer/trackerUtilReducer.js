@@ -1,9 +1,10 @@
-import{BS_CHECK_REQUEST,
-      BS_CHECK_SUCCESSFULL,
-      BS_CHECK_FAIL}
+import{CHANGE_MEASUREMENT_CONFIG_REQUEST,
+      CHANGE_MEASUREMENT_CONFIG_SUCCESSFULL,
+      CHANGE_MEASUREMENT_CONFIG_FAIL}
 from '../actions/trackerUtilActions'
 
 const initialTracker = {
+  changeMeasurementConfig:'single',
   doBScheck:0,
     fs:{
       a:'hello',
@@ -18,23 +19,14 @@ const initialTracker = {
 
 const trackerReducer = (state = initialTracker, action) => {
   switch(action.type){
-    case BS_CHECK_SUCCESSFULL:{
+    case CHANGE_MEASUREMENT_CONFIG_SUCCESSFULL:{
       return Object.assign({}, state,  {
-        doBScheck: state.doBScheck+1,
-          fs:{
-            a:'',
-            z:'',
-            d:''
-            },
-          bs:{a:'',
-              z:' ',
-              d:''
-              }
-      });
+        changeMeasurementConfig:'double',
+        });
   }
-    case BS_CHECK_FAIL:{
+    case CHANGE_MEASUREMENT_CONFIG_FAIL:{
       return Object.assign({}, state,  {
-          doBScheck:state.doBScheck
+          changeMeasurementConfig:state.changeMeasurementConfig
       });
     }
   }

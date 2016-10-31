@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {Button, Grid, Row, Col, FormControl} from 'react-bootstrap';
-import {BSCheck} from '../actions/trackerUtilActions';
+import {changeMeasurementConfig} from '../actions/trackerUtilActions';
 import FaceCheckTable from './FaceCheckTable';
 import TrackerOutput from './TrackerOutput';
 import TrackerStatus from './TrackerStatus';
@@ -10,13 +10,17 @@ import TrackerStatus from './TrackerStatus';
 const mapStateToProps = state => {
     return{
       tracker: state.tracker,
-      activeSensor: state.sensor.activeSensor
+      isConnected: state.sensor.isConnected,
+      sensor: state.sensor,
+      changeMeasurementConfig: state.tracker.changeMeasurementConfig,
+      home: state.sensor.homeNumber,
+      testmeasure:state.sensor.testmeasure
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return{
-      onBSCheck:() => dispatch(BSCheck())
+      onChangeMeasurementConfig:(isConnected) => dispatch(changeMeasurementConfig(isConnected))
     };
 };
 
@@ -31,15 +35,18 @@ export default class FaceCheck extends React.Component {
           <Grid>
               <Row className ='show-grid' >
                 <Col xs={2} md={2}>
-                  <Button onClick={() => this.props.onBSCheck()}>le Backsight Check</Button>
+                  <FaceCheckTable tracker = {this.props.tracker}
+                                  sensor={this.props.sensor}/>
                 </Col>
-                <Col xs={2} md={2}>
-                    <FaceCheckTable tracker = {this.props.tracker}/>
+                <Col xs={8} md={8}>
+                  <Button onClick={() => this.props.onChangeMeasurementConfig(this.props.isConnected)}>change measurment config</Button>
                 </Col>
               </Row>
               <Row className = 'show-grid'>
                 <Col xs={2} md={2}>
-                    <TrackerStatus tracker = {this.props.tracker}/>
+                    <TrackerStatus sensor = {this.props.sensor.isConnected}
+                                   changeMeasurementConfig={this.props.tracker.changeMeasurementConfig}
+                                   home= {this.props.sensor.homeNumber}/>
                 </Col>
                 <Col xs={10} md={10}>
                     <TrackerOutput/>
