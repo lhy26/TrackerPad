@@ -9,7 +9,7 @@ import {chooseFaroIonRequest,chooseFaroIonSuccessful,chooseFaroIonFail,
         compItActionRequest,compItActionSuccessful,compItActionFail,
         initActionRequest,initActionSuccessful,initActionFail
        } from '../actions/sensorActions';
-import {changeMeasurementConfigRequest,changeMeasurementConfigSuccessful,changeMeasurementConfigFail
+import {twoSideMeasurementSuccessRequest,twoSideMeasurementSuccessful,twoSideMeasurementSuccessFail
        }from '../actions/trackerUtilActions'
 import {
      CONNECT_SENSOR_REQUEST,
@@ -52,9 +52,9 @@ import {
      INIT_ACTION_SUCCESSFUL,
      INIT_ACTION_FAIL,
 } from '../actions/sensorActions';
-import {CHANGE_MEASUREMENT_CONFIG_REQUEST,
-       CHANGE_MEASUREMENT_CONFIG_SUCCESSFULL,
-       CHANGE_MEASUREMENT_CONFIG_FAIL} from '../actions/trackerUtilActions'
+import {TWO_SIDE_MEASUREMENT_REQUEST,
+       TWO_SIDE_MEASUREMENT_SUCCESSFUL,
+       TWO_SIDE_MEASUREMENT_FAIL} from '../actions/trackerUtilActions'
 //script variables
 let activeCmd = {id:0, type:''}
 let websocket ;
@@ -205,13 +205,14 @@ export const initWebSocket = (store) => {
            return;
          }
        //Block wich handle´s the BS Check Response
-    }else if (activeCmd.type == 'changeMeasurementConfig' && activeCmd.id == response.id){
-       console.log('onmessage changeMeasurementConfig')
+    }else if (activeCmd.type == 'twoSideMeasurement' && activeCmd.id == response.id){
+       console.log('onmessage twoSideMeasurement')
        if(!response.hasOwnProperty('error')){
-         store.dispatch(changeMeasurementConfigSuccessful(response));
+         measure();
+         store.dispatch(twoSideMeasurementSuccessful(response));
          return;
        }else{
-         store.dispatch(changeMeasurementConfigFail(response));
+         console.log("could not eather set the measurmenttype or measure");
          return;
        }
      }else{
@@ -291,9 +292,9 @@ export  const sensorSocketMiddleware = store => next => action => {
             break;
 
         }
-        case CHANGE_MEASUREMENT_CONFIG_REQUEST: {
-          console.log('MW BS_CHECK_REQUEST')
-          changeMeasurementConfig();
+        case TWO_SIDE_MEASUREMENT_REQUEST: {
+          console.log('MW TWO_SIDE_MEASUREMENT_REQUEST')
+          twoSideMeasurement();
             break;
     }
     return result;
@@ -616,10 +617,12 @@ function chooseFaroVantage(){
   writeToScreen(message);
   websocket.send(message);
 }
-function changeMeasurementConfig(){
+
+
+function twoSideMeasurement(){
   console.log ('changeMeasurementConfig funktion ganz weit unten in der middleware')
     activeCmd.id = activeCmd.id+1; //sum up 1 to the local variable idCount
-    activeCmd.type = "changeMeasurementConfig"; //set the active Command Type (activeCmd.type) to connect
+    activeCmd.type = "twoSideMeasurement"; //set the active Command Type (activeCmd.type) to connect
     const message = JSON.stringify( { "jsonrpc": "2.0", "method": "setMeasurementConfig","id": activeCmd.id, "params": {
        "readingType": "polar",
        "measureType": "singlePoint",

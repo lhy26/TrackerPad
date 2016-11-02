@@ -1,32 +1,23 @@
-import{CHANGE_MEASUREMENT_CONFIG_REQUEST,
-      CHANGE_MEASUREMENT_CONFIG_SUCCESSFULL,
-      CHANGE_MEASUREMENT_CONFIG_FAIL}
+import{TWO_SIDE_MEASUREMENT_REQUEST,
+      TWO_SIDE_MEASUREMENT_SUCCESSFUL,
+      TWO_SIDE_MEASUREMENT_FAIL}
 from '../actions/trackerUtilActions'
 
 const initialTracker = {
-  changeMeasurementConfig:'single',
+  measurementConfig:'single',
   doBScheck:0,
-    fs:{
-      a:'hello',
-      z:'is it me',
-      d:'you looking for'
-      },
-    bs:{a:'hello',
-        z:'its',
-        d:'me'
-        }
   };
 
 const trackerReducer = (state = initialTracker, action) => {
   switch(action.type){
-    case CHANGE_MEASUREMENT_CONFIG_SUCCESSFULL:{
+    case TWO_SIDE_MEASUREMENT_SUCCESSFUL:{
       return Object.assign({}, state,  {
-        changeMeasurementConfig:'double',
+        measurementConfig:'double',
         });
   }
-    case CHANGE_MEASUREMENT_CONFIG_FAIL:{
+    case TWO_SIDE_MEASUREMENT_FAIL:{
       return Object.assign({}, state,  {
-          changeMeasurementConfig:state.changeMeasurementConfig
+          measurementConfig:state.measurementConfig
       });
     }
   }

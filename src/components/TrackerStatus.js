@@ -9,8 +9,7 @@ import {OverlayTrigger, Tooltip} from 'react-bootstrap'
 const mapStateToProps = state => {
     return{
       isConnected: state.sensor.isConnected,
-      changeMeasurementConfig: state.tracker.changeMeasurementConfig,
-      home: state.sensor.homeNumber
+      measurementConfig: state.tracker.measurementConfig,
     };
 };
 
@@ -37,37 +36,33 @@ export default class TrackerStatus extends React.Component{
     	super(props);
    	}
 	render() {
-          if (this.props.isConnected === true && this.props.changeMeasurementConfig == 'double'){
+          if (this.props.isConnected === true && this.props.measurementConfig == 'double'){
             return(
               <ButtonGroup vertical>
                 <Button bsStyle="success">connected</Button>
-                <Button bsStyle="success">double measurment</Button>
-                <Button >homeNumberino = {this.props.home} </Button>
+                <Button >measurementConfig == {this.props.measurementConfig} </Button>
               </ButtonGroup>
             )
 
-          }else if(this.props.isConnected === true && this.props.changeMeasurementConfig == 'single'){
+          }else if(this.props.isConnected === true && this.props.measurementConfig == 'single'){
             return(
               <ButtonGroup vertical>
                 <Button bsStyle="success">connected</Button>
-                <Button bsStyle="danger">single measurment</Button>
-                <Button >homeNumberino = {this.props.home} </Button>
+                <Button >measurementConfig == {this.props.measurementConfig} </Button>
               </ButtonGroup>
             )
-          }else if(this.props.isConnected === false && this.props.changeMeasurementConfig == 'double'){
+          }else if(this.props.isConnected === false && this.props.measurementConfig == 'double'){
             return(
               <ButtonGroup vertical>
                 <Button bsStyle="danger">not connected</Button>
-                <Button bsStyle="success">double measurment</Button>
-                <Button >homeNumberino = {this.props.home} </Button>
+                <Button >measurementConfig == {this.props.measurementConfig} </Button>
               </ButtonGroup>
               )
           }else{
             return(
               <ButtonGroup vertical>
                   <Button bsStyle="danger">not connected</Button>
-                  <Button bsStyle="danger">single measurment</Button>
-                  <Button >homeNumberino = {this.props.home} </Button>
+                  <Button >measurementConfig == {this.props.measurementConfig} </Button>
               </ButtonGroup>
           )}
       }

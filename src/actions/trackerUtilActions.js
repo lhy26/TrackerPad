@@ -1,16 +1,16 @@
-export const CHANGE_MEASUREMENT_CONFIG_REQUEST='CHANGE_MEASUREMENT_CONFIG_REQUEST'
-export const CHANGE_MEASUREMENT_CONFIG_SUCCESSFULL='CHANGE_MEASUREMENT_CONFIG_SUCCESSFULL'
-export const CHANGE_MEASUREMENT_CONFIG_FAIL = 'CHANGE_MEASUREMENT_CONFIG_FAIL'
+export const TWO_SIDE_MEASUREMENT_REQUEST='TWO_SIDE_MEASUREMENT_REQUEST'
+export const TWO_SIDE_MEASUREMENT_SUCCESSFUL='TWO_SIDE_MEASUREMENT_SUCCESSFUL'
+export const TWO_SIDE_MEASUREMENT_FAIL = 'TWO_SIDE_MEASUREMENT_FAIL'
 
 /**
  *actioncreator for the trackerHandleActiveSensorChange() method
  *action will be fired as request
  * @param
  */
-export function changeMeasurementConfigRequest(){
+export function twoSideMeasurementRequest(){
  console.log ('ich bin hier bei bSCheckRequest')
  return{
-    type:CHANGE_MEASUREMENT_CONFIG_REQUEST,
+    type:TWO_SIDE_MEASUREMENT_REQUEST,
  };
 }
 
@@ -19,11 +19,11 @@ export function changeMeasurementConfigRequest(){
 *action will be fired as response
 * @param {string} response - might be the response from the middleware
 */
-export function changeMeasurementConfigSuccessful(response){
-  console.log ('ich bin hier bei BSCheckSuccessful')
+export function twoSideMeasurementSuccessful(response){
+  console.log ('ich bin hier bei twoSideMeasurementSuccessful')
   console.log(response)
   return{
-    type:CHANGE_MEASUREMENT_CONFIG_SUCCESSFULL,
+    type:TWO_SIDE_MEASUREMENT_SUCCESSFUL,
     response
   };
 }
@@ -33,10 +33,10 @@ export function changeMeasurementConfigSuccessful(response){
 *action will be fired if the sensorChange fails.
 * @param {string} error
 */
-export function changeMeasurementConfigFail(error){
- console.log ('ich bin hier bei CBSCheckFail')
+export function twoSideMeasurementFail(error){
+ console.log ('ich bin hier bei twoSideMeasurementFail')
  return{
-    type:CHANGE_MEASUREMENT_CONFIG_FAIL,
+    type:TWO_SIDE_MEASUREMENT_FAIL,
     error
  };
 }
@@ -49,13 +49,13 @@ export function changeMeasurementConfigFail(error){
 * @param {string} error
 * @param {string} response
 */
-export function changeMeasurementConfig(isConnected){
+export function twoSideMeasurement(isConnected){
 console.log ('ich bin hier bei BSCheck FUNKTION')
   if (isConnected == false){
       let error = "Puh, that shouldnt happened, good luck,you are f*****";
-      return dispatch => {dispatch(changeMeasurementConfigFail(error));};
+      return dispatch => {dispatch(twoSideMeasurementFail(error));};
   }
   return dispatch => {
-      dispatch(changeMeasurementConfigRequest());
+      dispatch(twoSideMeasurementRequest());
   };
 }

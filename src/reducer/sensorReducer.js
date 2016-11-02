@@ -35,11 +35,19 @@ const initialSensor = {
                 'LeicaAt40x'], //all available sensor types
   isConnected: false, //check if sensor is connected
   measureNumber: 0, //hypotetically ..counts the number of measurements
-  testmeasure:0,
   toggleNumber: 0, //counts how often the tracker toggles the sight
   homeNumber: 0, //TODO: not sure if counting or boolean(or both)
   compItNumber: 0, //Counts how often ...compit...you know...
   init: false,  // checks if Leica Tracker is initialized or not (leica only)
+  fs:{
+    a:'hello',
+    z:'is it me',
+    d:'you looking for'
+    },
+  bs:{a:'hello',
+      z:'its',
+      d:'me'
+      }
 };
 
 /**
@@ -104,7 +112,13 @@ const sensorReducer = (state = initialSensor, action) => {
           }
           return Object.assign({}, state,{
               measureNumber: state.measureNumber + 1,
-              testmeasure:action.response.result.observations["0"].values["0"]
+              fs:{a:action.response.result.observations["0"].values["0"],
+                 z:action.response.result.observations["0"].values["1"],
+                 d:action.response.result.observations["0"].values["2"],},
+              bs:{a:action.response.result.observations["1"].values["0"],
+                 z:action.response.result.observations["1"].values["1"],
+                 d:action.response.result.observations["1"].values["2"],}
+
 
           });
         }

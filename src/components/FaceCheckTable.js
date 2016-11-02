@@ -3,19 +3,16 @@ import { connect } from 'react-redux';
 import { Table } from 'react-bootstrap';
 
 
+
+
 const mapStateToProps = (state) => {
     return{
       tracker: state.tracker,
       activeSensor: state.sensor.activeSensor,
-      testmeasure:state.sensor.testmeasure
     };
 };
 const mapDispatchToProps = (dispatch) => {
     return{
-
-      onSetSensor: (name) => dispatch(setSensor(name)),
-      onDisConnectSensor:() => dispatch(disConnectSensor())
-
     };
 };
 @connect(mapStateToProps, mapDispatchToProps)
@@ -38,21 +35,21 @@ export default class FaceCheckTable extends React.Component{
         <tbody>
           <tr>
             <td>FS</td>
-            <td>{this.props.sensor.testmeasure}</td>
-            <td>{this.props.tracker.fs.z}</td>
-            <td>{this.props.tracker.fs.d}</td>
+            <td>{this.props.sensor.fs.a}</td>
+            <td>{this.props.sensor.fs.z}</td>
+            <td>{this.props.sensor.fs.d}</td>
           </tr>
           <tr>
             <td>BS</td>
-            <td>{this.props.tracker.bs.a}</td>
-            <td>{this.props.tracker.bs.z}</td>
-            <td>{this.props.tracker.bs.d}</td>
+            <td>{this.props.sensor.bs.a}</td>
+            <td>{this.props.sensor.bs.z}</td>
+            <td>{this.props.sensor.bs.d}</td>
           </tr>
           <tr>
-            <td>Result</td>
-            <td>FS-BS</td>
-            <td>FS-BS</td>
-            <td>FS-BS</td>
+            <td>Diff</td>
+            <td>diff1</td>
+            <td>diff2</td>
+            <td>diff3</td>
           </tr>
         </tbody>
       </Table>
