@@ -1,7 +1,6 @@
 import React from 'react';
 import {Button, ButtonGroup} from 'react-bootstrap';
 import {connect} from "react-redux";
-import {OverlayTrigger, Tooltip} from 'react-bootstrap'
 /**
  *dispatches the store´s states to property´s(so it can be used here)
  *
@@ -10,6 +9,7 @@ const mapStateToProps = state => {
     return{
       isConnected: state.sensor.isConnected,
       measurementConfig: state.tracker.measurementConfig,
+      activeSensor: state.sensor.activeSensor
     };
 };
 
@@ -23,10 +23,8 @@ const mapStateToProps = state => {
  */
 const mapDispatchToProps = dispatch => {
     return{
-
     };
 };
-
 /**
  *
  */
@@ -35,35 +33,22 @@ export default class TrackerStatus extends React.Component{
   constructor(props) {
     	super(props);
    	}
-	render() {
-          if (this.props.isConnected === true && this.props.measurementConfig == 'double'){
-            return(
-              <ButtonGroup vertical>
-                <Button bsStyle="success">connected</Button>
-                <Button >measurementConfig == {this.props.measurementConfig} </Button>
-              </ButtonGroup>
-            )
-
-          }else if(this.props.isConnected === true && this.props.measurementConfig == 'single'){
-            return(
-              <ButtonGroup vertical>
-                <Button bsStyle="success">connected</Button>
-                <Button >measurementConfig == {this.props.measurementConfig} </Button>
-              </ButtonGroup>
-            )
-          }else if(this.props.isConnected === false && this.props.measurementConfig == 'double'){
-            return(
-              <ButtonGroup vertical>
-                <Button bsStyle="danger">not connected</Button>
-                <Button >measurementConfig == {this.props.measurementConfig} </Button>
-              </ButtonGroup>
-              )
-          }else{
-            return(
-              <ButtonGroup vertical>
-                  <Button bsStyle="danger">not connected</Button>
-                  <Button >measurementConfig == {this.props.measurementConfig} </Button>
-              </ButtonGroup>
-          )}
+	render(){
+      if(this.props.isConnected == true ){
+        return(
+          <ButtonGroup>
+            <Button bsStyle="success" bsSize="xsmall">connected</Button>
+            <Button bsSize="xsmall">{this.props.activeSensor}</Button>
+            <Button bsStyle="warning" bsSize="xsmall">{this.props.measurementConfig}</Button>
+          </ButtonGroup>
+        )
       }
-  	}
+      return(
+        <ButtonGroup>
+          <Button bsStyle="danger" bsSize="xsmall">not connected</Button>
+          <Button bsSize="xsmall">{this.props.activeSensor}</Button>
+          <Button bsStyle="warning"bsSize="xsmall">{this.props.measurementConfig}</Button>
+        </ButtonGroup>
+      )
+  }
+}

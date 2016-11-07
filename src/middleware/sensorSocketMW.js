@@ -618,13 +618,18 @@ function chooseFaroVantage(){
   websocket.send(message);
 }
 
-
+/**
+ * function which changes the measurementConfig from 'default' to
+ * 2sightcheck (measure Frontside -> toggle sight -> measure backsight)
+ * @param
+ */
 function twoSideMeasurement(){
-  console.log ('changeMeasurementConfig funktion ganz weit unten in der middleware')
+  console.log ('twoSideMeasurement funktion ganz weit unten in der middleware')
     activeCmd.id = activeCmd.id+1; //sum up 1 to the local variable idCount
     activeCmd.type = "twoSideMeasurement"; //set the active Command Type (activeCmd.type) to connect
     const message = JSON.stringify( { "jsonrpc": "2.0", "method": "setMeasurementConfig","id": activeCmd.id, "params": {
-       "readingType": "polar",
+      // polar or cartesian
+       "readingType": "cartesian",
        "measureType": "singlePoint",
        "measurementConfig": [{
            "name": "singlePoint",
@@ -649,3 +654,34 @@ function twoSideMeasurement(){
     writeToScreen(message);
     websocket.send(message);
   }
+  function singleMeasurement(){
+    console.log ('singleMeasurement funktion ganz weit unten in der middleware')
+      activeCmd.id = activeCmd.id+1; //sum up 1 to the local variable idCount
+      activeCmd.type = "singleMeasurement"; //set the active Command Type (activeCmd.type) to connect
+      const message = JSON.stringify( { "jsonrpc": "2.0", "method": "setMeasurementConfig","id": activeCmd.id, "params": {
+        // polar or cartesian
+         "readingType": "cartesian",
+         "measureType": "singlePoint",
+         "measurementConfig": [{
+             "name": "singlePoint",
+             "properties": {
+                 "frequency": 1000,
+                 "iteration": 1,
+                 "measureTwoSides": false
+             }
+         }, {
+             "name": "scan",
+             "properties": {
+                 "scanMethod": "distance",
+                 "frequency": 1,
+                 "count": 1000,
+                 "delta": 0.001,
+                 "scanMethods": ["distance",
+                                 "time"]
+             }
+         }], }
+    })
+      writeToScreen('SENT: ');
+      writeToScreen(message);
+      websocket.send(message);
+    }

@@ -5,7 +5,6 @@ from '../actions/trackerUtilActions'
 
 const initialTracker = {
   measurementConfig:'single',
-  doBScheck:0,
   };
 
 const trackerReducer = (state = initialTracker, action) => {

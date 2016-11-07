@@ -39,15 +39,14 @@ const initialSensor = {
   homeNumber: 0, //TODO: not sure if counting or boolean(or both)
   compItNumber: 0, //Counts how often ...compit...you know...
   init: false,  // checks if Leica Tracker is initialized or not (leica only)
-  fs:{
-    a:'hello',
-    z:'is it me',
-    d:'you looking for'
-    },
-  bs:{a:'hello',
-      z:'its',
-      d:'me'
-      }
+  faceCheck: {
+    fs:{x:0,y:0,z:0},
+    bs:{x:0,y:0,z:0},
+    delta:{dx:0,dy:0,dz:0}
+  },
+  singleMeasurement:{
+    coords:{x:0,y:0,z:0}
+  }
 };
 
 /**
@@ -111,16 +110,23 @@ const sensorReducer = (state = initialSensor, action) => {
             measCount += 1
           }
           return Object.assign({}, state,{
-              measureNumber: state.measureNumber + 1,
-              fs:{a:action.response.result.observations["0"].values["0"],
-                 z:action.response.result.observations["0"].values["1"],
-                 d:action.response.result.observations["0"].values["2"],},
-              bs:{a:action.response.result.observations["1"].values["0"],
-                 z:action.response.result.observations["1"].values["1"],
-                 d:action.response.result.observations["1"].values["2"],}
-
-
-          });
+            measureNumber: state.measureNumber + 1,
+            faceCheck:{
+              fs:{x:action.response.result.observations["0"].values["0"],
+                  y:action.response.result.observations["0"].values["1"],
+                  z:action.response.result.observations["0"].values["2"],},
+              bs:{x:action.response.result.observations["1"].values["0"],
+                  y:action.response.result.observations["1"].values["1"],
+                  z:action.response.result.observations["1"].values["2"],},
+              delta:{dx:fs.x-bs.x,
+                     dy:fs.y-bs.y,
+                     dz:fs.z-bs.z}},
+                     
+            singleMeasurement:{
+              coords:{x:action.response.result.observations["0"].values["0"],
+                      y:action.response.result.observations["0"].values["1"],
+                      z:action.response.result.observations["0"].values["2"]}}
+        });
         }
         case MEASURE_ACTION_FAIL: {
           console.log('jetzt bin ich beim sensor reducer MEASUR_ACTION_FAIL')
