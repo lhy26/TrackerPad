@@ -2,14 +2,15 @@ import {chooseFaroIonRequest,chooseFaroIonSuccessful,chooseFaroIonFail,
         chooseFaroVantageRequest,chooseFaroVantageSuccessful,chooseFaroVantageFail,
         chooseLeicaRequest,chooseLeicaSuccessful,chooseLeicaFail,
         connectSensorRequest,connectSensorSuccessful,connectSensorFail,
-        measureActionRequest,measureActionSuccessful,measureActionFail,
+        singleMeasureActionRequest,singleMeasureActionSuccessful,singleMeasureActionFail,
         disConnectSensorRequest,disConnectSensorSuccessful,disConnectSensorFail,
         toggleSensorRequest,toggleSensorSuccessful,toggleSensorFail,
         homeActionRequest,homeActionSuccessful,homeActionFail,
         compItActionRequest,compItActionSuccessful,compItActionFail,
-        initActionRequest,initActionSuccessful,initActionFail
+        initActionRequest,initActionSuccessful,initActionFail,
+        twoSideMeasurementRequest,twoSideMeasurementSuccessful,twoSideMeasurementSuccessFail
        } from '../actions/sensorActions';
-import {twoSideMeasurementSuccessRequest,twoSideMeasurementSuccessful,twoSideMeasurementSuccessFail
+import {twoSideMeasConfigRequest,twoSideMeasConfigSuccessful,twoSideMeasConfigFail
        }from '../actions/trackerUtilActions'
 import {
      CONNECT_SENSOR_REQUEST,
@@ -32,9 +33,9 @@ import {
      CHOOSE_LEICA_FAIL,
      CHOOSE_LEICA_SUCCESSFUL,
 
-     MEASURE_ACTION_REQUEST,
-     MEASURE_ACTION_SUCCESSFUL,
-     MEASURE_ACTION_FAIL,
+     SINGLE_MEASURE_ACTION_REQUEST,
+     SINGLE_MEASURE_ACTION_SUCCESSFUL,
+     SINGLE_MEASURE_ACTION_FAIL,
 
      TOGGLE_SENSOR_REQUEST,
      TOGGLE_SENSOR_SUCCESSFUL,
@@ -51,10 +52,15 @@ import {
      INIT_ACTION_REQUEST,
      INIT_ACTION_SUCCESSFUL,
      INIT_ACTION_FAIL,
+
+     TWO_SIDE_MEASURE_ACTION_REQUEST,
+     TWO_SIDE_MEASURE_ACTION_SUCCESSFUL,
+     TWO_SIDE_MEASURE_ACTION_FAIL
+
 } from '../actions/sensorActions';
-import {TWO_SIDE_MEASUREMENT_REQUEST,
-       TWO_SIDE_MEASUREMENT_SUCCESSFUL,
-       TWO_SIDE_MEASUREMENT_FAIL} from '../actions/trackerUtilActions'
+import {TWO_SIDE_MEASCONFIG_REQUEST,
+       TWO_SIDE_MEASCONFIG_SUCCESSFUL,
+       TWO_SIDE_MEASCONFIG_FAIL} from '../actions/trackerUtilActions'
 //script variables
 let activeCmd = {id:0, type:''}
 let websocket ;
@@ -124,19 +130,19 @@ export const initWebSocket = (store) => {
        }
 
      //Block which handle´s the Measure Button Response
-     }else if (activeCmd.type == 'measure' && activeCmd.id == response.id){
+   }else if (activeCmd.type == 'measure' && activeCmd.id == response.id){
        console.log('onmessage measure')
-       if(response.result.successful){
-         store.dispatch(measureActionSuccessful(response));
+       if(!response.hasOwnProperty('error')){
+         store.dispatch(singleMeasureActionSuccessful(response));
          return;
        }else{
-         store.dispatch(measureActionFail(response));
+         store.dispatch(singleMeasureActionFail(response));
          return;
        }
      //Block which handle´s the Toggle Sight Button Response
      }else if (activeCmd.type == 'toggle' && activeCmd.id == response.id){
        console.log('onmessage toggle')
-       if(response.result.successful){
+       if(!response.hasOwnProperty('error')){
          store.dispatch(toggleSensorSuccessful(response));
          return;
        }else{
@@ -147,7 +153,7 @@ export const initWebSocket = (store) => {
      //Block wich handle´s the Home Button Response
      }else if (activeCmd.type == 'home' && activeCmd.id == response.id){
        console.log('onmessage home')
-       if(response.result.successful){
+       if(!response.hasOwnProperty('error')){
          store.dispatch(homeActionSuccessful(response));
          return;
        }else{
@@ -157,7 +163,7 @@ export const initWebSocket = (store) => {
      //Block wich handle´s the CompIt Button Response
    }else if (activeCmd.type == 'compIt' && activeCmd.id == response.id){
        console.log('onmessage compIt')
-       if(response.result.successful){
+       if(!response.hasOwnProperty('error')){
          store.dispatch(compItActionSuccessful(response));
          return;
        }else{
@@ -167,7 +173,7 @@ export const initWebSocket = (store) => {
      //Block wich handle´s the Init (Leica Only )Button Response
      }else if (activeCmd.type == 'init' && activeCmd.id == response.id){
        console.log('onmessage init')
-       if(response.result.successful){
+       if(!response.hasOwnProperty('error')){
          store.dispatch(initActionSuccessful(response));
          return;
        }else{
@@ -208,8 +214,7 @@ export const initWebSocket = (store) => {
     }else if (activeCmd.type == 'twoSideMeasurement' && activeCmd.id == response.id){
        console.log('onmessage twoSideMeasurement')
        if(!response.hasOwnProperty('error')){
-         measure();
-         store.dispatch(twoSideMeasurementSuccessful(response));
+         store.dispatch(twoSideMeasConfigSuccessful(response));
          return;
        }else{
          console.log("could not eather set the measurmenttype or measure");
@@ -266,7 +271,7 @@ export  const sensorSocketMiddleware = store => next => action => {
           chooseLeica();
             break;
         }
-        case MEASURE_ACTION_REQUEST: {
+        case SINGLE_MEASURE_ACTION_REQUEST: {
           console.log('MW MEASURE_ACTION_REQUEST')
           measure();
             break;
@@ -292,9 +297,14 @@ export  const sensorSocketMiddleware = store => next => action => {
             break;
 
         }
-        case TWO_SIDE_MEASUREMENT_REQUEST: {
-          console.log('MW TWO_SIDE_MEASUREMENT_REQUEST')
-          twoSideMeasurement();
+        case TWO_SIDE_MEASURE_ACTION_REQUEST: {
+          console.log('MW TWO_SIDE_MEASURE_ACTION_REQUEST')
+          measure();
+            break;
+        }
+        case TWO_SIDE_MEASCONFIG_REQUEST: {
+          console.log('MW TWO_SIDE_MEASCONFIG_REQUEST')
+          twoSideMeasurementConfig();
             break;
     }
     return result;
@@ -623,10 +633,10 @@ function chooseFaroVantage(){
  * 2sightcheck (measure Frontside -> toggle sight -> measure backsight)
  * @param
  */
-function twoSideMeasurement(){
-  console.log ('twoSideMeasurement funktion ganz weit unten in der middleware')
+function twoSideMeasurementConfig(){
+  console.log ('twoSideMeasurementConfig funktion ganz weit unten in der middleware')
     activeCmd.id = activeCmd.id+1; //sum up 1 to the local variable idCount
-    activeCmd.type = "twoSideMeasurement"; //set the active Command Type (activeCmd.type) to connect
+    activeCmd.type = "twoSideMeasurementConfig"; //set the active Command Type (activeCmd.type) to connect
     const message = JSON.stringify( { "jsonrpc": "2.0", "method": "setMeasurementConfig","id": activeCmd.id, "params": {
       // polar or cartesian
        "readingType": "cartesian",
@@ -654,7 +664,7 @@ function twoSideMeasurement(){
     writeToScreen(message);
     websocket.send(message);
   }
-  function singleMeasurement(){
+  function singleMeasurementConfig(){
     console.log ('singleMeasurement funktion ganz weit unten in der middleware')
       activeCmd.id = activeCmd.id+1; //sum up 1 to the local variable idCount
       activeCmd.type = "singleMeasurement"; //set the active Command Type (activeCmd.type) to connect

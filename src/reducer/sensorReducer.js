@@ -9,8 +9,8 @@ import {
     CONNECT_SENSOR_FAIL,
     DISCONNECT_SENSOR_SUCCESSFUL,
     DISCONNECT_SENSOR_FAIL,
-    MEASURE_ACTION_SUCCESSFUL,
-    MEASURE_ACTION_FAIL,
+    SINGLE_MEASURE_ACTION_SUCCESSFUL,
+    SINGLE_MEASURE_ACTION_FAIL,
     TOGGLE_SENSOR_SUCCESSFUL,
     TOGGLE_SENSOR_FAIL,
     HOME_ACTION_SUCCESSFUL,
@@ -20,7 +20,11 @@ import {
     COMPIT_ACTION_FAIL,
     INIT_ACTION_REQUEST,
     INIT_ACTION_SUCCESSFUL,
-    INIT_ACTION_FAIL
+    INIT_ACTION_FAIL,
+    TWO_SIDE_MEASURE_ACTION_REQUEST,
+    TWO_SIDE_MEASURE_ACTION_SUCCESSFUL,
+    TWO_SIDE_MEASURE_ACTION_FAIL
+
 
 
 } from '../actions/sensorActions';
@@ -42,7 +46,7 @@ const initialSensor = {
   faceCheck: {
     fs:{x:0,y:0,z:0},
     bs:{x:0,y:0,z:0},
-    delta:{dx:0,dy:0,dz:0}
+    delta:{dx: null ,dy: null ,dz:null  }
   },
   singleMeasurement:{
     coords:{x:0,y:0,z:0}
@@ -103,7 +107,28 @@ const sensorReducer = (state = initialSensor, action) => {
           });
         }
 
-        case MEASURE_ACTION_SUCCESSFUL: {
+        case SINGLE_MEASURE_ACTION_SUCCESSFUL: {
+          console.log('jetzt bin ich beim sensor reducer MEASUR_ACTION_SUCCESSFUL')
+          let measCount = state.measureNumber;
+          if(action.response.result.successful){
+            measCount += 1
+          }
+          return Object.assign({}, state,{
+            measureNumber: state.measureNumber + 1,
+            singleMeasurement:{
+              coords:{x:action.response.result.observations["0"].values["0"],
+                      y:action.response.result.observations["0"].values["1"],
+                      z:action.response.result.observations["0"].values["2"]}}
+        });
+        }
+        case SINGLE_MEASURE_ACTION_FAIL: {
+          console.log('jetzt bin ich beim sensor reducer MEASUR_ACTION_FAIL')
+          let measCount = state.measureNumber;
+          return Object.assign({}, state,{
+              measureNumber:  state.measureNumber - 1
+          });
+        }
+        case TWO_SIDE_MEASURE_ACTION_SUCCESSFUL: {
           console.log('jetzt bin ich beim sensor reducer MEASUR_ACTION_SUCCESSFUL')
           let measCount = state.measureNumber;
           if(action.response.result.successful){
@@ -118,24 +143,18 @@ const sensorReducer = (state = initialSensor, action) => {
               bs:{x:action.response.result.observations["1"].values["0"],
                   y:action.response.result.observations["1"].values["1"],
                   z:action.response.result.observations["1"].values["2"],},
-              delta:{dx:fs.x-bs.x,
-                     dy:fs.y-bs.y,
-                     dz:fs.z-bs.z}},
-                     
-            singleMeasurement:{
-              coords:{x:action.response.result.observations["0"].values["0"],
-                      y:action.response.result.observations["0"].values["1"],
-                      z:action.response.result.observations["0"].values["2"]}}
+              delta:{dx:state.faceCheck.fs.x - state.faceCheck.bs.x,
+                     dy:state.faceCheck.fs.y - state.faceCheck.bs.y,
+                     dz:state.faceCheck.fs.z - state.faceCheck.bs.z}},
         });
         }
-        case MEASURE_ACTION_FAIL: {
-          console.log('jetzt bin ich beim sensor reducer MEASUR_ACTION_FAIL')
-          let measCount = initialSensor.measureNumber;
+        case TWO_SIDE_MEASURE_ACTION_FAIL: {
+          console.log('jetzt bin ich beim sensor reducer TWO_SIDE_MEASURE_ACTION_FAIL')
+          let measCount = state.measureNumber;
           return Object.assign({}, state,{
               measureNumber:  state.measureNumber - 1
           });
         }
-
         case DISCONNECT_SENSOR_SUCCESSFUL: {
           console.log('jetzt bin ich beim sensor reducer DISCONNECT_SENSOR_SUCCESSFUL')
           return Object.assign({}, state,{

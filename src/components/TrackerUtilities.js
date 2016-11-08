@@ -25,19 +25,7 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
     return{
-
       onSetSensor: (name) => dispatch(setSensor(name)),
-  
-
-      /*
-      TODO : JMD Qualifizierten fragen ob ich die dinge hier brauche
-              eigentlich nicht oder?
-      onConnectSensor:() => dispatch(connectSensor()),
-      ,
-      onMeasure:() => dispatch(measureaction()),
-      onToggle:() => dispatch(toggleSensor()),
-      onCompIt:() => dispatch(compItaction())*/
-
     };
 };
 

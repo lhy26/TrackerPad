@@ -1,7 +1,7 @@
 import React from 'react';
 import {Button, ButtonGroup} from 'react-bootstrap';
 import {connect} from "react-redux";
-import {connectSensor, disConnectSensor, measureAction,toggleSensor,
+import {connectSensor, disConnectSensor, singleMeasureAction,toggleSensor,
         homeAction,compItAction} from '../actions/sensorActions'
 
 /**
@@ -33,7 +33,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return{
         onConnectSensorRequest: (activeSensor) => dispatch(connectSensor(activeSensor)),
-        onMeasureRequest: (isConnected) => dispatch(measureAction(isConnected)),
+        onSingleMeasureAction: (isConnected) => dispatch(singleMeasureAction(isConnected)),
         onDisConnectSensorRequest: (activeSensor) => dispatch(disConnectSensor(activeSensor)),
         onToggleRequest: (isConnected) => dispatch(toggleSensor(isConnected)),
         onHomeRequest:(isConnected) => dispatch(homeAction(isConnected)),
@@ -60,7 +60,7 @@ export default class FaroIonButtons extends React.Component{
 	    	<ButtonGroup vertical>
 	   			<Button onClick={() => this.props.onConnectSensorRequest(this.props.activeSensor)}>connect</Button>
 	   			<Button onClick={() => this.props.onDisConnectSensorRequest(this.props.activeSensor)}>disconnect</Button>
-	   			<Button onClick={() => this.props.onMeasureRequest(this.props.isConnected)}>measure</Button>
+	   			<Button onClick={() => this.props.onSingleMeasureAction(this.props.isConnected)}>measure</Button>
 	   			<Button onClick={() => this.props.onToggleRequest(this.props.isConnected)}>toggle</Button>
 	   			<Button onClick={() => this.props.onHomeRequest(this.props.isConnected)}>home</Button>
           <Button onClick={() => this.props.onCompItRequest(this.props.isConnected)}>compIt</Button>

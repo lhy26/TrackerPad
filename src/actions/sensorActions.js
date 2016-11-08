@@ -6,9 +6,9 @@ export const CONNECT_SENSOR_REQUEST='CONNECT_SENSOR_REQUEST'
 export const CONNECT_SENSOR_SUCCESSFUL='CONNECT_SENSOR_SUCCESSFUL'
 export const CONNECT_SENSOR_FAIL = 'CONNECT_SENSOR_FAIL'
 
-export const MEASURE_ACTION_REQUEST = 'MEASURE_ACTION_REQUEST'
-export const MEASURE_ACTION_SUCCESSFUL ='MEASURE_ACTION_SUCCESSFUL'
-export const MEASURE_ACTION_FAIL = 'MEASURE_ACTION_FAIL'
+export const SINGLE_MEASURE_ACTION_REQUEST = 'SINGLE_MEASURE_ACTION_REQUEST'
+export const SINGLE_MEASURE_ACTION_SUCCESSFUL ='SINGLE_MEASURE_ACTION_SUCCESSFUL'
+export const SINGLE_MEASURE_ACTION_FAIL = 'SINGLE_MEASURE_ACTION_FAIL'
 
 export const DISCONNECT_SENSOR_REQUEST = 'DISCONNECT_SENSOR_REQUEST'
 export const DISCONNECT_SENSOR_SUCCESSFUL ='DISCONNECT_SENSOR_SUCCESSFUL'
@@ -41,6 +41,11 @@ export const CHOOSE_VANTAGE_FAIL= 'CHOOSE_VANTAGE_FAIL'
 export const CHOOSE_LEICA_REQUEST = 'CHOOSE_LEICA_REQUEST'
 export const CHOOSE_LEICA_SUCCESSFUL = 'CHOOSE_LEICA_SUCCESSFUL'
 export const CHOOSE_LEICA_FAIL = 'CHOOSE_LEICA_FAIL'
+
+export const TWO_SIDE_MEASURE_ACTION_REQUEST = 'TWO_SIDE_MEASURE_ACTION_REQUEST'
+export const TWO_SIDE_MEASURE_ACTION_SUCCESSFUL = 'TWO_SIDE_MEASURE_ACTION_SUCCESSFUL'
+export const TWO_SIDE_MEASURE_ACTION_FAIL = 'TWO_SIDE_MEASURE_ACTION_FAIL'
+
 
 
 export function setSensor(sensor){
@@ -191,14 +196,14 @@ export function connectSensor(activeSensor){
 * @param {string} isConnected
 * @param {string} error
 */
-export function measureAction(isConnected){
-  console.log ('ich bin hier bei Measuraction FUNKTION')
+export function singleMeasureAction(isConnected){
+  console.log ('ich bin hier bei singleMeasureAction FUNKTION')
     if ( isConnected == false){
         let error = "Sensor not connected";
-        return dispatch => {dispatch(measureActionFail(error));};
+        return dispatch => {dispatch(singleMeasureActionFail(error));};
     }
     return dispatch => {
-        dispatch(measureActionRequest());
+        dispatch(singleMeasureActionRequest());
     };
 }
 
@@ -207,10 +212,10 @@ export function measureAction(isConnected){
  *action will be fired as request
  * @param
  */
-export function measureActionRequest(){
- console.log ('ich bin hier bei measure Action request')
+export function singleMeasureActionRequest(){
+ console.log ('ich bin hier bei singlemeasure Action request')
  return{
-    type:MEASURE_ACTION_REQUEST,
+    type:SINGLE_MEASURE_ACTION_REQUEST,
  };
 }
 
@@ -219,11 +224,11 @@ export function measureActionRequest(){
 *action will be fired as response if the action is successful
 * @param {string} response - might be the response from the middleware
 */
-export function measureActionSuccessful(response){
-  console.log ('measureActionSuccessful')
+export function singleMeasureActionSuccessful(response){
+  console.log ('singlemeasureActionSuccessful')
   console.log(response)
   return{
-    type:MEASURE_ACTION_SUCCESSFUL,
+    type:SINGLE_MEASURE_ACTION_SUCCESSFUL,
     response
   };
 }
@@ -233,10 +238,10 @@ export function measureActionSuccessful(response){
 *action will be fired if the measurement fails.
 * @param {string} error
 */
-export function measureActionFail(error){
+export function singleMeasureActionFail(error){
  console.log ('ich bin hier bei measurAction Failure')
  return{
-    type:MEASURE_ACTION_FAIL,
+    type:SINGLE_MEASURE_ACTION_FAIL,
     error
  };
 }
@@ -520,4 +525,56 @@ export function initAction(isConnected){
     return dispatch => {
         dispatch(initActionRequest());
     };
+}
+
+
+
+export function twoSideMeasure(isConnected){
+  console.log ('ich bin hier bei twoSideMeasure FUNKTION')
+    if ( isConnected == false){
+        let error = "Sensor not connected";
+        return dispatch => {dispatch(twoSideMeasureFail(error));};
+    }
+    return dispatch => {
+        dispatch(twoSideMeasureActionRequest());
+    };
+}
+
+/**
+ *actioncreator for the measureActionRequest() method
+ *action will be fired as request
+ * @param
+ */
+export function twoSideMeasureActionRequest(){
+ console.log ('ich bin hier bei measure Action request')
+ return{
+    type:TWO_SIDE_MEASURE_ACTION_REQUEST,
+ };
+}
+
+/**
+*actioncreator for the measureAction() method
+*action will be fired as response if the action is successful
+* @param {string} response - might be the response from the middleware
+*/
+export function twoSideMeasureSuccessful(response){
+  console.log ('measureActionSuccessful')
+  console.log(response)
+  return{
+    type:TWO_SIDE_MEASURE_ACTION_SUCCESSFUL,
+    response
+  };
+}
+
+/**
+*actioncreator for the measureAction() method.
+*action will be fired if the measurement fails.
+* @param {string} error
+*/
+export function twoSideMeasureFail(error){
+ console.log ('ich bin hier bei measurAction Failure')
+ return{
+    type:TWO_SIDE_MEASURE_ACTION_FAIL,
+    error
+ };
 }

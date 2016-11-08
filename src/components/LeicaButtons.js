@@ -27,7 +27,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return{
         onConnectSensorRequest: () => dispatch(connectSensor()),
-        onMeasureRequest: () => dispatch(measureAction()),
+        onSingleMeasureAction: (isConnected) => dispatch(singleMeasureAction(isConnected)),
         onDisConnectSensorRequest: () => dispatch(disConnectSensor()),
         onToggleRequest: () => dispatch(toggleSensor()),
         onInitRequest: () => dispatch(initAction()),
@@ -51,7 +51,7 @@ export default class LeicaAt40xButtons extends React.Component{
 	    	<ButtonGroup vertical>
           <Button onClick={() => this.props.onConnectSensorRequest()}>connect</Button>
           <Button onClick={() => this.props.onDisConnectSensorRequest()}>disconnect</Button>
-          <Button onClick={() => this.props.onMeasureRequest()}>measure</Button>
+            <Button onClick={() => this.props.onSingleMeasureAction(this.props.isConnected)}>measure</Button>
           <Button onClick={() => this.props.onToggleRequest()}>toggle</Button>
           <Button onClick={() => this.props.onInitRequest()}>initialize</Button>
 	   		</ButtonGroup>

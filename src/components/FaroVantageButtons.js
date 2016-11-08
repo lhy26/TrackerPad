@@ -25,7 +25,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return{
         onConnectSensorRequest: () => dispatch(connectSensor()),
-        onMeasureRequest: () => dispatch(measureAction()),
+        onSingleMeasureAction: (isConnected) => dispatch(singleMeasureAction(isConnected)),
         onDisConnectSensorRequest: () => dispatch(disConnectSensor()),
         onToggleRequest: () => dispatch(toggleSensor()),
         onHomeRequest:() => dispatch(homeAction()),

@@ -1,6 +1,6 @@
-import{TWO_SIDE_MEASUREMENT_REQUEST,
-      TWO_SIDE_MEASUREMENT_SUCCESSFUL,
-      TWO_SIDE_MEASUREMENT_FAIL}
+import{
+      TWO_SIDE_MEASCONFIG_SUCCESSFUL,
+      TWO_SIDE_MEASCONFIG_FAIL}
 from '../actions/trackerUtilActions'
 
 const initialTracker = {
@@ -9,12 +9,12 @@ const initialTracker = {
 
 const trackerReducer = (state = initialTracker, action) => {
   switch(action.type){
-    case TWO_SIDE_MEASUREMENT_SUCCESSFUL:{
+    case TWO_SIDE_MEASCONFIG_SUCCESSFUL:{
       return Object.assign({}, state,  {
         measurementConfig:'double',
         });
   }
-    case TWO_SIDE_MEASUREMENT_FAIL:{
+    case TWO_SIDE_MEASCONFIG_FAIL:{
       return Object.assign({}, state,  {
           measurementConfig:state.measurementConfig
       });
