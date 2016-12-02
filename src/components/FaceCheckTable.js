@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { Table } from 'react-bootstrap';
 
 
-
 const mapStateToProps = (state) => {
     return{
       tracker: state.tracker,
@@ -16,23 +15,23 @@ const mapDispatchToProps = (dispatch) => {
     };
 };
 @connect(mapStateToProps, mapDispatchToProps)
-export default class FaceCheckTable extends React.Component{
+export default class FaceCheckTable extends React.Component {
 
   constructor(props) {
     super(props);
   }
-  render(){
-   var fsa = this.props.sensor.faceCheck.fs.x;
-   var fsz = this.props.sensor.faceCheck.fs.y;
-   var fsd = this.props.sensor.faceCheck.fs.z;
+  render() {
+    let fsa = this.props.sensor.faceCheck.fs.x;
+    let fsz = this.props.sensor.faceCheck.fs.y;
+    let fsd = this.props.sensor.faceCheck.fs.z;
 
-   var bsa = this.props.sensor.faceCheck.bs.x;
-   var bsz = this.props.sensor.faceCheck.bs.y;
-   var bsd = this.props.sensor.faceCheck.bs.z;
+    let bsa = this.props.sensor.faceCheck.bs.x;
+    let bsz = this.props.sensor.faceCheck.bs.y;
+    let bsd = this.props.sensor.faceCheck.bs.z;
 
-   var diff1 = this.props.sensor.faceCheck.delta.dx;
-   var diff2 = this.props.sensor.faceCheck.delta.dy;
-   var diff3 = this.props.sensor.faceCheck.delta.dz;
+    let diff1 = this.props.sensor.faceCheck.delta.dx;
+    let diff2 = this.props.sensor.faceCheck.delta.dy;
+    let diff3 = this.props.sensor.faceCheck.delta.dz;
 
     const tableInstance = (
       <Table striped bordered condensed hover>
@@ -66,7 +65,6 @@ export default class FaceCheckTable extends React.Component{
         </tbody>
       </Table>
       );
-        return(tableInstance);
-    }
-
+    return (tableInstance);
+  }
 }

@@ -1,17 +1,17 @@
 import React from 'react';
-import { Button,  ButtonGroup } from 'react-bootstrap';
-import {connect} from "react-redux";
-import {connectSensor, disConnectSensor, measureAction,toggleSensor,
-        homeAction,compItAction} from '../actions/sensorActions'
+import { Button, ButtonGroup } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { connectSensor, disConnectSensor, singleMeasureAction, toggleSensor,
+        homeAction, compItAction } from '../actions/sensorActions'
 
 /**
  *dispatches the store´s states to property´s(so it can be used here)
  *
  */
 const mapStateToProps = state => {
-    return{
-      //store variable -> syntax x = store.x
-    };
+  return {
+      // store variable -> syntax x = store.x
+  };
 };
 
 /**
@@ -23,14 +23,14 @@ const mapStateToProps = state => {
  *
  */
 const mapDispatchToProps = dispatch => {
-    return{
-        onConnectSensorRequest: () => dispatch(connectSensor()),
-        onSingleMeasureAction: (isConnected) => dispatch(singleMeasureAction(isConnected)),
-        onDisConnectSensorRequest: () => dispatch(disConnectSensor()),
-        onToggleRequest: () => dispatch(toggleSensor()),
-        onHomeRequest:() => dispatch(homeAction()),
-        onCompItRequest:() => dispatch(compItAction())
-    };
+  return {
+    onConnectSensorRequest: () => dispatch(connectSensor()),
+    onSingleMeasureAction: isConnected => dispatch(singleMeasureAction(isConnected)),
+    onDisConnectSensorRequest: () => dispatch(disConnectSensor()),
+    onToggleRequest: () => dispatch(toggleSensor()),
+    onHomeRequest: () => dispatch(homeAction()),
+    onCompItRequest: () => dispatch(compItAction())
+  };
 };
 
 /**
@@ -39,25 +39,20 @@ const mapDispatchToProps = dispatch => {
 @connect(mapStateToProps, mapDispatchToProps)
 export default class FaroVantageButtons extends React.Component{
 
-  	constructor(props) {
-    	super(props);
-   	}
+    constructor(props) {
+      super(props);
+    }
 
-
-
-
-
-	render() {
-	    return (
-	    	<ButtonGroup vertical>
-          <Button onClick={() => this.props.onConnectSensorRequest()}>connect</Button>
-	   			<Button onClick={() => this.props.onDisConnectSensorRequest()}>disconnect</Button>
-	   			<Button onClick={() => this.props.onMeasureRequest()}>measure</Button>
-	   			<Button onClick={() => this.props.onToggleRequest()}>toggle</Button>
-	   			<Button onClick={() => this.props.onHomeRequest()}>home</Button>
-          <Button onClick={() => this.props.onCompItRequest()}>compIt</Button>
-
-	   		</ButtonGroup>
-    	);
-  	}
+  render() {
+    return (
+      <ButtonGroup vertical>
+        <Button onClick={() => this.props.onConnectSensorRequest()}>connect</Button>
+        <Button onClick={() => this.props.onDisConnectSensorRequest()}>disconnect</Button>
+        <Button onClick={() => this.props.onMeasureRequest()}>measure</Button>
+        <Button onClick={() => this.props.onToggleRequest()}>toggle</Button>
+        <Button onClick={() => this.props.onHomeRequest()}>home</Button>
+        <Button onClick={() => this.props.onCompItRequest()}>compIt</Button>
+      </ButtonGroup>
+    );
+  }
 }

@@ -1,9 +1,9 @@
 import React from 'react';
-import { Button,  ButtonGroup } from 'react-bootstrap';
-import {connect} from "react-redux";
-import {connectSensor, disConnectSensor, measureAction,toggleSensor,
-        initAction} from '../actions/sensorActions';
-//import {trackerHandleActiveSensorChange} from '../actions/trackerUtilActions'
+import { Button, ButtonGroup } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { connectSensor, disConnectSensor, measureAction, toggleSensor,
+        initAction } from '../actions/sensorActions';
+// import {trackerHandleActiveSensorChange} from '../actions/trackerUtilActions'
 
 
 /**
@@ -11,10 +11,10 @@ import {connectSensor, disConnectSensor, measureAction,toggleSensor,
  *
  */
 const mapStateToProps = state => {
-    return{
-      //store variable -> syntax x = store.x
-    };
+  return {
+      // store variable -> syntax x = store.x
   };
+};
 
 /**
  *If an object is passed, each function inside it will
@@ -25,14 +25,14 @@ const mapStateToProps = state => {
  *
  */
 const mapDispatchToProps = dispatch => {
-    return{
-        onConnectSensorRequest: () => dispatch(connectSensor()),
-        onSingleMeasureAction: (isConnected) => dispatch(singleMeasureAction(isConnected)),
-        onDisConnectSensorRequest: () => dispatch(disConnectSensor()),
-        onToggleRequest: () => dispatch(toggleSensor()),
-        onInitRequest: () => dispatch(initAction()),
-        onTrackerHandleActiveSensorChangeRequest:() => dispatch(trackerHandleActiveSensorChange())
-    };
+  return {
+    onConnectSensorRequest: () => dispatch(connectSensor()),
+    onSingleMeasureAction: (isConnected) => dispatch(singleMeasureAction(isConnected)),
+    onDisConnectSensorRequest: () => dispatch(disConnectSensor()),
+    onToggleRequest: () => dispatch(toggleSensor()),
+    onInitRequest: () => dispatch(initAction()),
+    onTrackerHandleActiveSensorChangeRequest: () => dispatch(trackerHandleActiveSensorChange())
+  };
 };
 
 /**
@@ -41,20 +41,20 @@ const mapDispatchToProps = dispatch => {
 @connect(mapStateToProps, mapDispatchToProps)
 export default class LeicaAt40xButtons extends React.Component{
 
-  	constructor(props) {
-    	super(props);
-   	}
+constructor(props) {
+  super(props);
+}
 
 
-	render() {
-	    return (
-	    	<ButtonGroup vertical>
-          <Button onClick={() => this.props.onConnectSensorRequest()}>connect</Button>
-          <Button onClick={() => this.props.onDisConnectSensorRequest()}>disconnect</Button>
-            <Button onClick={() => this.props.onSingleMeasureAction(this.props.isConnected)}>measure</Button>
-          <Button onClick={() => this.props.onToggleRequest()}>toggle</Button>
-          <Button onClick={() => this.props.onInitRequest()}>initialize</Button>
-	   		</ButtonGroup>
-    	);
-  	}
+  render() {
+    return (
+      <ButtonGroup vertical>
+        <Button onClick={() => this.props.onConnectSensorRequest()}>connect</Button>
+        <Button onClick={() => this.props.onDisConnectSensorRequest()}>disconnect</Button>
+        <Button onClick={() => this.props.onSingleMeasureAction(this.props.isConnected)}>measure</Button>
+        <Button onClick={() => this.props.onToggleRequest()}>toggle</Button>
+        <Button onClick={() => this.props.onInitRequest()}>initialize</Button>
+      </ButtonGroup>
+    );
+  }
 }
