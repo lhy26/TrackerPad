@@ -58,11 +58,18 @@ export default class FaroIonButtons extends React.Component {
   render() {
     return (
       <ButtonGroup vertical>
-	   	    <Button onClick={() => this.props.onConnectSensorRequest(this.props.activeSensor)}>connect</Button>
-	   			<Button onClick={() => this.props.onDisConnectSensorRequest(this.props.activeSensor)}>disconnect</Button>
-	   			<Button onClick={() => this.props.onSingleMeasureAction(this.props.isConnected)}>measure</Button>
-	   			<Button onClick={() => this.props.onToggleRequest(this.props.isConnected)}>toggle</Button>
-	   			<Button onClick={() => this.props.onHomeRequest(this.props.isConnected)}>home</Button>
+        <Button
+          onClick={() =>
+    this.props.onConnectSensorRequest(this.props.activeSensor)}>connect</Button>
+        <Button
+          onClick={() =>
+    this.props.onDisConnectSensorRequest(this.props.activeSensor)}>disconnect
+        </Button>
+        <Button onClick={() =>
+     this.props.onSingleMeasureAction(this.props.isConnected)}>measure</Button>
+        <Button
+          onClick={() => this.props.onToggleRequest(this.props.isConnected)}>toggle</Button>
+	   		<Button onClick={() => this.props.onHomeRequest(this.props.isConnected)}>home</Button>
           <Button onClick={() => this.props.onCompItRequest(this.props.isConnected)}>compIt</Button>
       </ButtonGroup>
     );

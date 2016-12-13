@@ -7,8 +7,8 @@ import FaceCheckTable from './FaceCheckTable';
 import TrackerOutput from './TrackerOutput';
 
 
-const mapStateToProps = state => {
-  return{
+const mapStateToProps = (state) => {
+  return {
     tracker: state.tracker,
     isConnected: state.sensor.isConnected,
     sensor: state.sensor,
@@ -17,25 +17,25 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return{
-    ontwoSideMeasConfig:(isConnected) => dispatch(twoSideMeasConfig(isConnected)),
-    onTwoSideMeasureAction:(isConnected)=> dispatch(twoSideMeasureAction(isConnected))
+  return {
+    ontwoSideMeasConfig: isConnected => dispatch(twoSideMeasConfig(isConnected)),
+    onTwoSideMeasureAction: isConnected => dispatch(twoSideMeasureAction(isConnected))
   };
 };
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class FaceCheck extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
   }
   componentWillMount() {
     this.props.ontwoSideMeasConfig (this.props.isConnected);
   }
-  render(){
+  render() {
     return (
       <div>
         <Grid>
-          <Row className ='show-grid' >
+          <Row className="show-grid" >
             <Col xs={5} md={5}>
               <FaceCheckTable
                 tracker={this.props.tracker}
@@ -43,9 +43,10 @@ export default class FaceCheck extends React.Component {
                 />
             </Col>
           </Row>
-          <Row className = 'show-grid'>
+          <Row className="show-grid">
             <Col xs={2} md={2}>
-              <Button onClick={() =>
+              <Button
+                onClick={() =>
                     this.props.onTwoSideMeasureAction(this.props.isConnected)}>Measure
                 </Button>
             </Col>
