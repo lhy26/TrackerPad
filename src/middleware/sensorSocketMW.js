@@ -1,17 +1,17 @@
-import {chooseFaroIonRequest,chooseFaroIonSuccessful,chooseFaroIonFail,
-        chooseFaroVantageRequest,chooseFaroVantageSuccessful,chooseFaroVantageFail,
-        chooseLeicaRequest,chooseLeicaSuccessful,chooseLeicaFail,
-        connectSensorRequest,connectSensorSuccessful,connectSensorFail,
-        singleMeasureActionRequest,singleMeasureActionSuccessful,singleMeasureActionFail,
-        disConnectSensorRequest,disConnectSensorSuccessful,disConnectSensorFail,
-        toggleSensorRequest,toggleSensorSuccessful,toggleSensorFail,
-        homeActionRequest,homeActionSuccessful,homeActionFail,
-        compItActionRequest,compItActionSuccessful,compItActionFail,
-        initActionRequest,initActionSuccessful,initActionFail,
-        twoSideMeasurementRequest,twoSideMeasurementSuccessful,twoSideMeasurementSuccessFail
+import { chooseFaroIonRequest, chooseFaroIonSuccessful, chooseFaroIonFail,
+        chooseFaroVantageRequest, chooseFaroVantageSuccessful, chooseFaroVantageFail,
+        chooseLeicaRequest, chooseLeicaSuccessful, chooseLeicaFail,
+        connectSensorRequest, connectSensorSuccessful, connectSensorFail,
+        singleMeasureActionRequest, singleMeasureActionSuccessful, singleMeasureActionFail,
+        disConnectSensorRequest, disConnectSensorSuccessful, disConnectSensorFail,
+        toggleSensorRequest, toggleSensorSuccessful, toggleSensorFail,
+        homeActionRequest, homeActionSuccessful, homeActionFail,
+        compItActionRequest, compItActionSuccessful, compItActionFail,
+        initActionRequest, initActionSuccessful, initActionFail,
+        twoSideMeasurementRequest, twoSideMeasurementSuccessful, twoSideMeasurementSuccessFail
        } from '../actions/sensorActions';
-import {twoSideMeasConfigRequest,twoSideMeasConfigSuccessful,twoSideMeasConfigFail
-       }from '../actions/trackerUtilActions'
+import {twoSideMeasConfigRequest, twoSideMeasConfigSuccessful, twoSideMeasConfigFail
+       } from '../actions/trackerUtilActions'
 import {
      CONNECT_SENSOR_REQUEST,
      CONNECT_SENSOR_SUCCESSFUL,
@@ -58,12 +58,12 @@ import {
      TWO_SIDE_MEASURE_ACTION_FAIL
 
 } from '../actions/sensorActions';
-import {TWO_SIDE_MEASCONFIG_REQUEST,
+import { TWO_SIDE_MEASCONFIG_REQUEST,
        TWO_SIDE_MEASCONFIG_SUCCESSFUL,
        TWO_SIDE_MEASCONFIG_FAIL} from '../actions/trackerUtilActions'
-//script variables
-let activeCmd = {id:0, type:''}
-let websocket ;
+// script variables
+let activeCmd = { id: 0, type: ''}
+let websocket;
 
 /**
  *Initialize the connection between webservice(websocket) and
@@ -73,67 +73,67 @@ let websocket ;
  */
 export const initWebSocket = (store) => {
 
-   //as soon as the connection between Trackerpad and webservice is open
+   // as soon as the connection between Trackerpad and webservice is open
    // the function OnOpen will be triggered
    // onOpen successful -> you can communicate with the service
-   const onOpen = (evt) =>
+  const onOpen = (evt) =>
     {
-      console.log("HIER BEI ONOPEN, Mit Webservice verbunden");
-    }
-   //if the onOpen not successful -> onClose will be  triggered
-   const onClose = (evt)=>
+      console.log('HIER BEI ONOPEN, Mit Webservice verbunden');
+  }
+   // if the onOpen not successful -> onClose will be  triggered
+  const onClose = (evt) =>
     {
-    console.log("HIER BEI ONCLOSE");
-    }
-   //if there is an error during the connection -> onErro will be triggered
-   const onError = (evt)=>
+    console.log('HIER BEI ONCLOSE');
+  }
+   // if there is an error during the connection -> onErro will be triggered
+  const onError = (evt) =>
     {
       writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
-    }
+  }
 
-   //dispatch specific action to trigger update
-   const onMessage = (evt) =>{
+   // dispatch specific action to trigger update
+  const onMessage = (evt) => {
      var response = JSON.parse(evt.data);
 
-     if(response == null){
-       //dispatch sensorErrorAction('sensor response is null')
+    if (response == null) {
+       // dispatch sensorErrorAction('sensor response is null')
        console.log('sensor response is null');
-       return;
-     }
+      return;
+    }
 
-     if(response.hasOwnProperty('error')){
-       //dispatch sensorErrorAction(response.error.errorMsg)
+    if (response.hasOwnProperty('error')) {
+       // dispatch sensorErrorAction(response.error.errorMsg)
        console.log(response.error.errorMsg);
-       return;
-     }
+      return;
+    }
 
-     //checks if Cmd.Type is right and if evt.data.id matchs with activeCmd.id
-     if(activeCmd.type == 'connect' && activeCmd.id == response.id){
-       console.log("onmessage connect");
-       if(response.result.successful){
-         store.dispatch(connectSensorSuccessful(response));
-         return;
-       }else{
-         store.dispatch(connectSensorFail(response));
-         return;
-       }
+     // checks if Cmd.Type is right and if evt.data.id matchs with activeCmd.id
+    if (activeCmd.type === 'connect' && activeCmd.id === response.id) {
+       console.log('onmessage connect');
+      if (response.result.successful) {
+        store.dispatch(connectSensorSuccessful(response));
+        return;
+      } else {
+        store.dispatch(connectSensorFail(response));
+        return;
+      }
 
-     //if there is a connect function, there must also be a disconnect ...
-     console.log("onmessage disconnect");
-     }else if (activeCmd.type == 'disconnect' && activeCmd.id == response.id){
-       if(response.result.successful){
-         store.dispatch(disConnectSensorSuccessful(response));
-         return;
-       }else{
-         store.dispatch(disConnectSensorFail(response));
-         return;
-       }
+     // if there is a connect function, there must also be a disconnect ...
+     console.log ('onmessage disconnect');
+    } else if (activeCmd.type === 'disconnect' && activeCmd.id === response.id) {
+      if (response.result.successful) {
+        store.dispatch(disConnectSensorSuccessful(response));
+        return;
+      } else {
+        store.dispatch(disConnectSensorFail(response));
+        return;
+      }
 
-     //Block which handle´s the Measure Button Response
-   }else if (activeCmd.type == 'measure' && activeCmd.id == response.id){
+     // Block which handle´s the Measure Button Response
+    } else if (activeCmd.type === 'measure' && activeCmd.id === response.id) {
        console.log('onmessage measure')
-       if(!response.hasOwnProperty('error')){
-         store.dispatch(singleMeasureActionSuccessful(response));
+      if (!response.hasOwnProperty('error')) {
+        store.dispatch(singleMeasureActionSuccessful(response));
          return;
        }else{
          store.dispatch(singleMeasureActionFail(response));
@@ -286,10 +286,10 @@ export  const sensorSocketMiddleware = store => next => action => {
           home();
             break;
         }
-        case COMPIT_ACTION_REQUEST: {
-          console.log('MW COMPIT_ACTION_REQUEST')
-          compIt();
-            break;
+      case COMPIT_ACTION_REQUEST: {
+       console.log('MW COMPIT_ACTION_REQUEST')
+        compIt();
+        break;
         }
         case INIT_ACTION_REQUEST: {
           console.log('MW INIT_ACTION_REQUEST')
